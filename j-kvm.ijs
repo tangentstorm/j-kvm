@@ -1,7 +1,6 @@
 NB.
-NB. kvm: keyboard/video/mouse* for terminal apps in j
+NB. kvm: keyboard/video/mouse driver for terminal apps in j
 NB.
-NB. * but no mouse stuff yet
 NB. ----------------------------------------------------
 cocurrent 'kvm'
 coinsert 'vt' [ require 'tangentstorm/j-kvm/vt'
