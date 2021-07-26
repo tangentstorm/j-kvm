@@ -1,7 +1,7 @@
 # j-kvm
 Keyboard, Video, Mouse driver for console mode programming in J
 
-Supports J902+ on Windows 10+, Linux, and (probably?) OSX.
+Supports J902+ on Windows 10+, and Linux. (OSX needs some bug fixing, but I lack a dev environment at the moment.)
 
 **Note:** on windows, you need the stock `jconsole.exe` that comes with J, *and* you need to run it through the <a href="https://github.com/microsoft/terminal">"new" Windows terminal</a>.
 
