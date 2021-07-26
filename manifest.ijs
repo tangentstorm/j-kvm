@@ -4,6 +4,6 @@ RELEASE =: 'j902'
 FOLDER  =: 'tangentstorm/j-kvm'
 FILES =: 0 : 0
 j-kvm.ijs
-vid/
-vt/
+vid.ijs
+vt.ijs
 )
