@@ -63,8 +63,8 @@ rnd =: {{
 cocurrent prev
 
 render =: {{ NB. render to vt
-  echo@''^:(h =. 0{HW__y) c =. curxy''
-  0 0 $ raw@0 goxy c+h [ c render y [ goxy c=.0 10 -~ curxy''
+  echo@''^:(h =. 0{HW__y) c =. curxy_vt_''
+  0 0 $ raw_vt_@0 goxy c+h [ c render y [ goxy c=.0 10 -~ curxy_vt_''
 :
   goxy x [ reset''
   f =. FG256_vt_ each FGB__y
@@ -79,7 +79,7 @@ render =: {{ NB. render to vt
 rndscr =: {{
   x render rnd__vid [ vid =. 32 10 conew'vid'
   codestroy__vid''
-  echo ''[reset''[ raw 0}}
+  echo ''[reset''[ raw_vt_ 0}}
 
 
 demo =: {{
