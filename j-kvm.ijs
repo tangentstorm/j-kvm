@@ -4,7 +4,7 @@ NB.
 NB. * but no mouse stuff yet
 NB. ----------------------------------------------------
 cocurrent 'kvm'
-coinsert 'vt' [ require 'vt.ijs'
+coinsert 'vt' [ require 'tangentstorm/j-kvm/vt'
 
 ticks=: 0 NB. milliseconds between calling v
 break=: 0

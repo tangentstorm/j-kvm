@@ -188,9 +188,7 @@ bw  =: RESET_vt_
 
 sleep =: [: (6!:3) 0.001 * ]
 
-
 init''
-coinsert_base_'vt'
 
 NB. just a demo to show colors and waiting for a keypress.
 demo =: {{

@@ -10,8 +10,7 @@ NB. composed to allow drawing multiple text-mode
 NB. windows onto a main buffer, which can then be
 NB. rendered to the screen using vt escape codes.
 NB.
-
-require 'vt.ijs'
+require 'tangentstorm/j-kvm/vt'
 
 NB. by default, just use vt directly
 term =: <'vt'
