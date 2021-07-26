@@ -19,7 +19,7 @@ ceol =: {{ ceol__term y }}
 putc =: {{ putc__term y }}
 goxy =: {{ goxy__term y }}
 go00 =: goxy@0 0
-puts =: putc"0
+puts =: {{ puts__term y }}
 fgc  =: {{ fgc__term y }}
 bgc  =: {{ bgc__term y }}
 reset=: {{ reset__term y }}
@@ -64,7 +64,7 @@ cocurrent prev
 
 render =: {{ NB. render to vt
   echo@''^:(h =. 0{HW__y) c =. curxy''
-  raw@0 goxy c+h [ c render y [ goxy c=.0 10 -~ curxy''
+  0 0 $ raw@0 goxy c+h [ c render y [ goxy c=.0 10 -~ curxy''
 :
   goxy x [ reset''
   f =. FG256_vt_ each FGB__y

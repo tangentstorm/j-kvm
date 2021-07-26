@@ -76,6 +76,7 @@ GetConsoleScreenBufferInfo =: 'kernel32 GetConsoleScreenBufferInfo c x *s'&cd
 GetStdHandle =: 'kernel32 GetStdHandle *c s'&cd
 ReadConsoleInput =: 'kernel32 ReadConsoleInputA b x *s i *i'&cd
 PeekConsoleInput =: 'kernel32 PeekConsoleInputA b x *s i *i'&cd
+SetConsoleOutputCP =: 'kernel32 SetConsoleOutputCP b i'&cd
 InputArgs =: {{ w_stdi;(10#0);1;<,0 }}
 WriteConsole =: 'kernel32 WriteConsoleA b x *c *i x'&cd
 
@@ -138,6 +139,7 @@ init =: {{
   if. IFWIN do.
     w_stdi =: >{. GetStdHandle _10
     w_stdo =: >{. GetStdHandle _11
+    SetConsoleOutputCP 65001  NB. CP_UTF8
     raw  =: ]
     rkey =: w_rkey
     gethw =: w_gethw
