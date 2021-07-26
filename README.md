@@ -9,7 +9,7 @@ Supports J902+ on Windows 10+, Linux, and (probably?) OSX.
 
     install'github:tangentstorm/j-kvm@main'
 
-## Demo
+## Demos
 
 There is a demo that shows how to use 256 colors and run an animation while waiting for a keypress:
 
@@ -17,6 +17,26 @@ There is a demo that shows how to use 256 colors and run an animation while wait
     demo_vt_''
 
 <img src="demo_vt_.png"/>
+
+     load'tangentstorm/j-kvm/vid'
+
+     NB. draw a low-res mandelbrot set
+     sc =. 0.05  NB. scale
+     z =: (}:sc*i:20) j./~ 1-~ sc * _20+i.64
+     mb =:|. 8-+/2>|(z+*:)^:(<8) C =. z
+     pal =: dfh every' 'cut'00 ff dc ca 7d 57 27 1b 13'
+
+     NB. this part illustrates how to render a color image to the terminal,
+     NB. using unicode block drawing characters, so that two 'pixels' are
+     NB. stored in every text cell in the console.
+     buf =: ( 1 0.5 * $mb) conew 'vid'
+     fill__buf u:16b2580
+     'fg bg'=:pal{~>(2|i.#|:mb) </. |:mb
+     FGB__buf=:fg
+     BGB__buf=:bg
+     render buf
+
+<img src="vid_mandelbrot.png">
 
 ## Usage
 
