@@ -96,4 +96,8 @@ onkey =: {{
   NB. reset @ ceol (puts ":>coname'') sp puts ": vnm [ sp puts ":y [ echo'' NB.goxy 0 9
   0 0$0}}
 
-loop =: {{ u with_kbd onkey break_kvm_ =: 0 [ cocurrent y }}
+loop =: {{
+  if. #y do. cocurrent y end.
+  if. 3=4!:0<'kvm_init' do. kvm_init'' end.
+  u with_kbd onkey break_kvm_ =: 0
+  if. 3=4!:0<'kvm_done' do. kvm_done'' end. }}
