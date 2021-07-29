@@ -1,9 +1,9 @@
 # j-kvm
 Keyboard, Video, Mouse driver for console mode programming in J
 
-Supports J902+ on Windows 10+, and Linux. (OSX needs some bug fixing, but I lack a dev environment at the moment.)
+Supports J902+ on Windows 10+, and Linux. (OSX is not yet working.)
 
-**Note:** on windows, you need the stock `jconsole.exe` that comes with J, *and* you need to run it through the <a href="https://github.com/microsoft/terminal">"new" Windows terminal</a>.
+**Note:** on windows, you need to run the `jconsole.exe` that comes with J, not `jqt` or `jhs`.
 
 ## Installation
 
@@ -16,7 +16,21 @@ There is a demo that shows how to use 256 colors and run an animation while wait
     load'tangentstorm/j-kvm/vt'
     demo_vt_''
 
-<img src="demo_vt_.png"/>
+There are actually 24-bit colors available. Enough to run viewmat:
+
+    load 'tangentstorm/j-kvm/vm'
+    vm ~:/\^:(<32) 32#1  NB. sierpinski triangle
+    vm i. 5 5            NB. normal viewmat colors
+
+<img src="demo_vm_simple.png" height="640"/>
+
+    NB. mandelbrot viewmat with custom palette
+    [ sy =. 0.028 [ sx=. 0.065
+    mb =: 8-+/2>|(z+*:)^:(<8) C =. z =: (}:sx*i:20) j./~ 1-~ sy * _40+i.128
+    pal =: (3#256)#: dfh;.1' 0 ffffff ffd21d b28f00 400fe8 1d2799 000055 000033'
+    pal vm |:|.mb
+
+<img src="demo_vm_mandelbrot.png" height="640"/>
 
      load'tangentstorm/j-kvm/vid'
 

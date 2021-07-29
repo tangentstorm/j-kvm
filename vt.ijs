@@ -29,6 +29,8 @@ help =: 0 : 0
 
   fgc n     -> set foreground color
   bgc n     -> set background color
+  fgx n     -> set 24-bit foreground color
+  bgx n     -> set 24-bit background color
   reset''   -> reset to default colors
 
   sleep n   -> sleep for n milliseconds
@@ -59,6 +61,11 @@ NB. Most modern terminals seem to support 256 colors.
 NB. FG256 y ->str.
 FG256=: CSI,'38;5;', 'm',~ ":   NB. fg (numeric)
 BG256=: CSI,'48;5;', 'm',~ ":   NB. bg (numeric)
+
+NB. xterm 24-bit color codes
+NB. FG24B y ->str.
+FG24B=: CSI,'38;2;', 'm',~ [: rplc&(' ';';')@": (3#256)&#:
+BG24B=: CSI,'48;2;', 'm',~ [: rplc&(' ';';')@": (3#256)&#:
 
 NB. GOXY[X,Y]->str: code to set cursor position
 GOXY =: CSI, ":@{:, ';', 'f',~ ":@{.
@@ -184,6 +191,8 @@ curs =: puts@CURS
 
 fgc =: puts@FG256
 bgc =: puts@BG256
+fgx =: puts@FG24B
+bgx =: puts@BG24B
 reset=: puts@RESET
 
 NB. these two are just handy to type when your screen gets messy:
