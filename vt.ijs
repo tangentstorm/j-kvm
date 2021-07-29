@@ -72,6 +72,7 @@ NB. windows terminal:
 NB. ----------------------------------------------------
 
 NB. https://docs.microsoft.com/en-us/windows/console/console-functions
+SetConsoleMode =: 'kernel32 SetConsoleMode b x s'&cd
 GetConsoleScreenBufferInfo =: 'kernel32 GetConsoleScreenBufferInfo c x *s'&cd
 GetStdHandle =: 'kernel32 GetStdHandle *c s'&cd
 ReadConsoleInput =: 'kernel32 ReadConsoleInputA b x *s i *i'&cd
@@ -139,6 +140,7 @@ init =: {{
   if. IFWIN do.
     w_stdi =: >{. GetStdHandle _10
     w_stdo =: >{. GetStdHandle _11
+    SetConsoleMode w_stdo;7   NB. enable escape codes
     SetConsoleOutputCP 65001  NB. CP_UTF8
     raw  =: ]
     rkey =: w_rkey
