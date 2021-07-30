@@ -1,4 +1,8 @@
 
+## version 0.0.4 - 7/29/2021
+
+- bugfix: add vm.ijs to manifest
+
 ## version 0.0.3 - 7/29/2021
 
 - fixed scaling and aspect ratio on the in-console viewmat
