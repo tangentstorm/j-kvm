@@ -1,5 +1,5 @@
 CAPTION =: 'Keyboard/Video/Mouse driver for console mode programming'
-VERSION =: '0.0.2'
+VERSION =: '0.0.3'
 RELEASE =: 'j902'
 FOLDER  =: 'tangentstorm/j-kvm'
 FILES =: 0 : 0

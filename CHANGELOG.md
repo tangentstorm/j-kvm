@@ -1,4 +1,9 @@
 
+## version 0.0.3 - 7/29/2021
+
+- fixed scaling and aspect ratio on the in-console viewmat
+- updated demo code in README
+
 ## version 0.0.2 - 7/29/2021
 
 - got it working with stock `jconsole.exe` on windows 10.

@@ -25,32 +25,22 @@ There are actually 24-bit colors available. Enough to run viewmat:
 <img src="demo_vm_simple.png" height="640"/>
 
     NB. mandelbrot viewmat with custom palette
-    [ sy =. 0.028 [ sx=. 0.065
-    mb =: 8-+/2>|(z+*:)^:(<8) C =. z =: (}:sx*i:20) j./~ 1-~ sy * _40+i.128
+    'sx sy' =. % 50 32 [ 'w h' =. 240 80
+    mb =: |.|:8-+/2>|(z+*:)^:(<8) z =: (}:sy*i:-:h) j./~ 1-~ sx * (<.w%_3)+i.w
     pal =: (3#256)#: dfh;.1' 0 ffffff ffd21d b28f00 400fe8 1d2799 000055 000033'
-    pal vm |:|.mb
+    pal vm mb
 
 <img src="demo_vm_mandelbrot.png" height="640"/>
 
      load'tangentstorm/j-kvm/vid'
 
-     NB. draw a low-res mandelbrot set
-     sc =. 0.05  NB. scale
-     z =: (}:sc*i:20) j./~ 1-~ sc * _20+i.64
-     mb =:|. 8-+/2>|(z+*:)^:(<8) C =. z
-     pal =: dfh every' 'cut'00 ff dc ca 7d 57 27 1b 13'
+     NB. render a buffer of randomly colored characters
+     buf =: (|.hw=:<. -: gethw_vt_'') conew 'vid'
+     CHB__buf =: a. {~ 32 + ? hw $ 95
+     FGB__buf =: ? hw $ 256
+     echo'' [ 30 10 render buf
 
-     NB. this part illustrates how to render a color image to the terminal,
-     NB. using unicode block drawing characters, so that two 'pixels' are
-     NB. stored in every text cell in the console.
-     buf =: ( 1 0.5 * $mb) conew 'vid'
-     fill__buf u:16b2580
-     'fg bg'=:pal{~>(2|i.#|:mb) </. |:mb
-     FGB__buf=:fg
-     BGB__buf=:bg
-     render buf
-
-<img src="vid_mandelbrot.png">
+<img src="demo_vid.png" height="640">
 
 ## Usage
 

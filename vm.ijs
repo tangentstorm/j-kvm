@@ -10,10 +10,10 @@ downscale =: {{
   NB. force input to rank 2 array:
   if. 2 > # $y do. y =. ,. y end.
   if. 2 < # $y do. echo 'too many dimensions' throw. end.
-  maxhw =. gethw_vt_''
+  mxhw =. gethw_vt_''
   NB. scale whichever axis has the smaller ratio
-  if. *./maxhw > $y do. y
-  else. (([: >. ([:<./maxhw%$)*$) fitvm_jviewmat_ ]) y end. }}
+  if. *./mxhw > $y do. y
+  else. (([: |. [: >. ([:<./mxhw%$)*$) fitvm_jviewmat_ ]) y end. }}
 
 NB. normally viewmat writes a large png file and then
 NB. renders it in a separate window, but we are just going
@@ -23,7 +23,7 @@ vm =: {{
   '' vm y
 :
   c =. 8 u:16b2580 [ 'dat ang' =. x getvm1_jviewmat_ downscale_vm_ y
-  for_row. 2 1 <@(c,~FG24B@[,BG24B@])/;._3 dat do.
+  for_row. (,:~2 1) <@(c,~FG24B@[,BG24B@])/;._3 dat do.
     ROW =: row
     puts ;row
     puts RESET,CR,LF
