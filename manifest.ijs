@@ -7,4 +7,5 @@ j-kvm.ijs
 vid.ijs
 vt.ijs
 vm.ijs
+ui.ijs
 )
