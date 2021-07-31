@@ -27,7 +27,7 @@ render =: verb define
 :
   for_vln. H {. S }. L do.  NB. visible lines
     goxy x + 0,vln_index
-    if. vln -: a: do. puts W#' '
+    if. vln -: a: do. puts W#' ' [ bgc tx_bg
     else.
       fgc (C=S+vln_index) pick tx_fg;hi_fg
       bgc (C=S+vln_index) pick tx_bg;hi_bg
