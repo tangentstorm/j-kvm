@@ -38,7 +38,7 @@ help =: 0 : 0
   mouse b   -> enable/disable mouse events
 )
 
-
+D00 =: 1 1  NB. origin (so upper corner is 0 0 instead of 1 1)
 
 NB. ANSI/VT-100/xterm escape codes
 NB. -------------------------------------------------------
@@ -68,7 +68,7 @@ FG24B=: CSI,'38;2;', 'm',~ [: rplc&(' ';';')@": (3#256)&#:
 BG24B=: CSI,'48;2;', 'm',~ [: rplc&(' ';';')@": (3#256)&#:
 
 NB. GOXY[X,Y]->str: code to set cursor position
-GOXY =: CSI, ":@{:, ';', 'f',~ ":@{.
+GOXY =: [: (CSI, ":@{:, ';', 'f',~ ":@{.) D00+]
 
 NB. CURS [0/1]->str: code to show/hide cursor
 CURS =: CSI,'?25','lh'{~]
