@@ -130,7 +130,7 @@ NB. ----------------------------------------------------
 
 curxy =: {{ raw 1
   r =. 2}. wfc 'R' [ puts CSI,'6n'
-  |.0".>';' splitstring r }}
+  D00 -~ |.0".>';' splitstring r }}
 
 mouse =: {{
   'cdm' mouse y  NB. click, drag, move events
