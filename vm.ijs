@@ -22,7 +22,8 @@ NB. the console.
 vm =: {{
   '' vm y
 :
-  c =. 8 u:16b2580 [ 'dat ang' =. x getvm1_jviewmat_ downscale_vm_ y
+  c =. 8 u:16b2580 [ y =. downscale_vm_ y
+  if. x-:'rgb' do. dat =.y else. dat =. >{. x getvm1_jviewmat_ y end.
   if. 2|dat do. dat =. dat,0 end. NB. force even number of rows
   for_row. (,:~2 1) <@(c,~FG24B@[,BG24B@])/;._3 dat do.
     ROW =: row
