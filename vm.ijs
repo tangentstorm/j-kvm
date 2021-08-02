@@ -8,7 +8,7 @@ NB. preserving the aspect ratio. Note that when we
 NB. we draw, we will only use half this height.
 downscale =: {{
   NB. force input to rank 2 array:
-  if. 2 > # $y do. y =. ,: y end.
+  if. 2 > # $y do. y =. |: ,. y end.
   if. 2 < # $y do. echo 'too many dimensions' throw. end.
   mxhw =. gethw_vt_''
   NB. scale whichever axis has the smaller ratio
