@@ -21,6 +21,8 @@ create =: verb define
 
 fwd =: {{ C=:(<:#L)<.C+1 if. (C-S) >: H do. S =: S + 1 end. C }}
 bak =: {{ C=: 0 >. C-1   if. (C-S) < 0 do. S =: S - 1 end. C }}
+val =: {{ C { ::a: L }}
+atz =: {{ C = <: #L }}
 
 render =: verb define
   XY render y
