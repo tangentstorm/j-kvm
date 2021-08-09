@@ -40,6 +40,6 @@ NB. will not insert an extra newline after the image.
 NB. The reason it is a separate verb is that you may want to
 NB. capture the generated escape sequences in a string. If so,
 NB. one way to do that would be: emit_vm_ =: ]
-emit =: {{ ceol'' [ reset'' [ puts y }}
-
+emit0 =: emit =: {{ ceol'' [ reset'' [ puts y }}
+emit =: ]
 vm_z_=:vm_vm_
