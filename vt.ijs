@@ -46,7 +46,7 @@ NB. these all-caps names indicate string constants
 NB. or verbs that return strings. This is so you can
 NB. build up your own sequences in bulk.
 
-ESC  =: u:27               NB. ANSI escape character
+ESC  =: 27{a.              NB. ANSI escape character
 CSI  =: ESC,'['            NB. vt100 'command sequence introduce'
 CSCR =: ,CSI,"1 0'HJ'      NB. clear screen
 CEOL =: CSI,'0K'           NB. clear to end of line
@@ -116,7 +116,7 @@ w_rkey =: {{
     if. *{.nr do.
       dn=. 2{b
       'rc kc sc ch' =. 4{.4}.b
-      ch =. u:ch
+      ch =. ch{a.
       mod =. '.x'{~_32{.!.0#: 65536 65536 #. _2{.b
       NB. smoutput 'dn:';dn;'rc:';rc;'kc:';kc;'ch:';ch;'mod:';mod
       NB. skip over modifier keys
