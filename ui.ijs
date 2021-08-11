@@ -1,6 +1,7 @@
-NB. (text-based) ui widgets for kvm
+NB. (text-based) UI widgets for kvm
 require 'tangentstorm/j-kvm/vid'
-cocurrent 'uiTheme'
+cocurrent 'UiTheme'
+coinsert 'vt'
 
 XY =: 0 0
 tx_fg =: 7
@@ -8,8 +9,8 @@ tx_bg =: 0
 hi_fg =: 0
 hi_bg =: 7
 
-coclass 'uiList'
-coinsert 'uiTheme';'vt'
+coclass 'UiList'
+coinsert 'UiTheme'
 
 create =: verb define
   W =: 32
