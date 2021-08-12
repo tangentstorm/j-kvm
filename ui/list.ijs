@@ -1,5 +1,5 @@
 
-coclass 'UiList' extends 'UiTheme'
+coclass 'UiList' extends 'UiWidget'
 
 doc =: 'A vertically-scrolling buffer with one line highlighted.'
 
@@ -18,10 +18,8 @@ val =: {{ C { ::a: L }}
 (go0 =: {{ C =: 0 }})`(goz =: {{ C =: <: #L }})
 
 render =: verb define
-  XY render y
-:
   for_vln. H {. S }. L do.  NB. visible lines
-    goxy x + 0,vln_index
+    goxy 0,vln_index
     hi =. (C=S+vln_index)
     fgc hi pick tx_fg;hi_fg
     bgc hi pick tx_bg;hi_bg
