@@ -75,10 +75,12 @@ copyto =: {{ NB. copyto__self y
   0 0 $ 0 }}
 
 blit =: {{ NB. xy blit__self src. stamp y onto self at xy.
-  rc =. <(;/|.x) + L:0 <@i."0 HW__y  NB. row and col indices
-  CHB =: CHB__y rc } CHB
-  FGB =: FGB__y rc } FGB
-  BGB =: BGB__y rc } BGB
+  yx =. |.x
+  hw =.(<: HW-yx) <. yx + HW__y  NB. clip to bounds.
+  rc =. <(;/yx) + L:0 <@i."0 hw  NB. row and col indices
+  CHB =: (hw {.CHB__y) rc } CHB
+  FGB =: (hw {.FGB__y) rc } FGB
+  BGB =: (hw {.BGB__y) rc } BGB
   0 0$0}}
 
 cocurrent prev
