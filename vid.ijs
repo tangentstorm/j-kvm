@@ -11,17 +11,23 @@ NB. windows onto a main buffer, which can then be
 NB. rendered to the screen using vt escape codes.
 NB.
 require 'tangentstorm/j-kvm/vt'
+cocurrent'kvm'
 
-NB. by default, just use vt directly
-term =: <'vt'
+term =: <'vt'        NB. by default, just use vt directly
+stack =: ''
+pushterm =: {{ term_kvm_ =: y [ stack_kvm_ =: term_kvm_,stack_kvm_ }}
+popterm =: {{ stack_kvm_ =: }.stack_kvm_ [ term_kvm_ =: {.stack_kvm_ }}
+
 cscr =: {{ cscr__term y }}
 ceol =: {{ ceol__term y }}
 putc =: {{ putc__term y }}
 goxy =: {{ goxy__term y }}
-go00 =: goxy@0 0
+go00 =: {{ goxy__term 0 0 }}
 puts =: {{ puts__term y }}
 fgc  =: {{ fgc__term y }}
 bgc  =: {{ bgc__term y }}
+fgx  =: {{ fgx__term y }}
+bgx  =: {{ bgx__term y }}
 reset=: {{ reset__term y }}
 
 prev =. ([ coclass@'vid') coname''
@@ -38,9 +44,9 @@ cscr  =: {{ fill ' ' [ FGB=:HW$FG [ BGB=:HW$BG }}
 sethw =: {{ cscr go00 reset WH =: |. HW =: y }}
 init  =: {{ sethw gethw_vt_^:(-.*#y) y }}
 
-peek =: {{ (<y) { m~ }}
-poke =: {{ 0 0 $ (m)=: x (<y) } m~ }}
-pepo =: {{ ([: m peek ]) : (m poke) }}
+peek =: {{ (<|.y) { m~ }}
+poke =: {{ 0 0 $ (m)=: x (<|.y) } m~ }}
+pepo =: {{ ([: m peek ]) : (m poke) :: ] }}
 
 NB. peek/poke various buffers
 fgxy =: 'FGB' pepo
@@ -51,7 +57,7 @@ NB. write to ram
 NB. putc =: {{ (y chxy])`(FG fgxy ])`(BG bgxy ])`:0 XY }}
 putc =: {{
   y chxy XY [ FG fgxy XY [ BG bgxy XY
-  if. {. XY =: XY + 1 0 do. XY =: 0,1+{:XY end. }}
+  if. 0={. XY =: WH|XY + 1 0 do.  XY =: 0,1+{:XY end. }}
 puts =: putc"0
 
 rnd =: {{
@@ -59,6 +65,21 @@ rnd =: {{
   FGB =: ?HW$256
   BGB =: HW$0 95 0 4 18
   coname'' }}
+
+copyto =: {{ NB. copyto__self y
+  CHB =: CHB__y
+  FGB =: FGB__y
+  BGB =: BGB__y
+  HW  =: HW__y
+  XY  =: XY__y
+  0 0 $ 0 }}
+
+blit =: {{ NB. xy blit__self src. stamp y onto self at xy.
+  rc =. <(;/|.x) + L:0 <@i."0 HW__y  NB. row and col indices
+  CHB =: CHB__y rc } CHB
+  FGB =: FGB__y rc } FGB
+  BGB =: BGB__y rc } BGB
+  0 0$0}}
 
 cocurrent prev
 
