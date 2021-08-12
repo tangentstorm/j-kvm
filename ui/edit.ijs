@@ -1,6 +1,6 @@
-NB. simple text field
+NB. simple abstract editor
 
-coclass 'UiField' extends 'UiWidget'
+coclass 'UiEditWidget' extends 'UiWidget'
 
 create =: {{
   B =: y           NB. the buffer to edit.

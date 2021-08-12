@@ -15,4 +15,4 @@ XY =: 0 0
 
 
 load 'tangentstorm/j-kvm/ui/list'    NB. UiList
-load 'tangentstorm/j-kvm/ui/field'   NB. UiField
+load 'tangentstorm/j-kvm/ui/edit'    NB. UiEditWidget
