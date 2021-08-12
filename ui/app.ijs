@@ -28,4 +28,14 @@ render =: {{
   end.
   popterm''
   NB. TODO: compare A to B and draw only what has changed.
-  0 0 render_kvm_ B}}
+  jn =. ,&.>
+  for_row. (CHB__A ~: CHB__B)+.(FGB__A ~: FGB__B)+.(BGB__A ~: BGB__B) do.
+    if. # I. row do.
+      goxy 0, ri=.row_index
+      f =. FG256_vt_ each ri{FGB__B
+      b =. BG256_vt_ each ri{BGB__B
+      s =. f jn b jn ri{CHB__B
+      reset@'' puts_vt_ 8 u: ;s
+    end.
+  end.
+  0 0 $ copyto__A B }}
