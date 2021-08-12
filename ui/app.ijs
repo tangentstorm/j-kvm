@@ -8,10 +8,13 @@ create =: {{
   C =: '' conew 'vid'  NB. canvas for widgets
   B =: '' conew 'vid'  NB. main video buffer
   A =: '' conew 'vid'  NB. alternate frame buffer
-  fill__A 128{a.       NB. so we redraw everything on first render
+  smudge''
 }}
 
 of =: {{ (x,'__y')~ [ y }}"1 0
+
+NB. smudge marks entire screen dirty so we redraw
+smudge =: {{ fill__A 128{a. }}
 
 render =: {{
   NB. redraw each visible widget that needs a refresh.
