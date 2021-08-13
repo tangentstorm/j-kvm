@@ -35,8 +35,8 @@ render =: {{
   for_row. (CHB__A ~: CHB__B)+.(FGB__A ~: FGB__B)+.(BGB__A ~: BGB__B) do.
     if. # I. row do.
       goxy 0, ri=.row_index
-      f =. FG256_vt_ each ri{FGB__B
-      b =. BG256_vt_ each ri{BGB__B
+      f =. FGvt each ri{FGB__B
+      b =. BGvt each ri{BGB__B
       s =. f jn b jn ri{CHB__B
       reset@'' puts_vt_ 8 u: ;s
     end.

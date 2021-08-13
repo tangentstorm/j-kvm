@@ -33,14 +33,23 @@ reset=: {{ reset__term y }}
 prev =. ([ coclass@'vid') coname''
 create =: init@|.
 
-fgc   =: {{ FG =: y }}
-bgc   =: {{ BG =: y }}
+fgx   =: {{ FG =: y }}
+bgx   =: {{ BG =: y }}
+fgc   =: {{ FG =: -y }}
+bgc   =: {{ BG =: -y }}
 goxy  =: {{ XY =: y }}
 go00  =: goxy@0 0
 reset =: fgc@7@bgc@0
 
 fill  =: {{ 0 0$ CHB=:HW$y }}
 cscr  =: {{ fill ' ' [ FGB=:HW$FG [ BGB=:HW$BG }}
+ceol  =: {{
+  rg =. <|.(({.XY) + i. {.WH-XY); }.XY
+  CHB =: ' ' rg } CHB
+  FGB =: FG rg } FGB
+  BGB =: BG rg } BGB
+  0 0 $ 0}}
+
 sethw =: {{ cscr go00 reset WH =: |. HW =: y }}
 init  =: {{ sethw gethw_vt_^:(-.*#y) y }}
 
@@ -75,9 +84,9 @@ copyto =: {{ NB. copyto__self y
   0 0 $ 0 }}
 
 blit =: {{ NB. xy blit__self src. stamp y onto self at xy.
-  yx =. |.x
-  hw =.(<: HW-yx) <. yx + HW__y  NB. clip to bounds.
-  rc =. <(;/yx) + L:0 <@i."0 hw  NB. row and col indices
+  yx =: |.x
+  hw =:(<: HW-yx) <. HW__y       NB. clip to bounds.
+  rc =: <(;/yx) + L:0 <@i."0 hw  NB. row and col indices
   CHB =: (hw {.CHB__y) rc } CHB
   FGB =: (hw {.FGB__y) rc } FGB
   BGB =: (hw {.BGB__y) rc } BGB
@@ -85,13 +94,16 @@ blit =: {{ NB. xy blit__self src. stamp y onto self at xy.
 
 cocurrent prev
 
+FGvt =: (FG24B_vt_`(FG256_vt_@-))@.(0&>:)
+BGvt =: (BG24B_vt_`(BG256_vt_@-))@.(0&>:)
+
 render =: {{ NB. render to vt
   echo@''^:(h =. 0{HW__y) c =. curxy_vt_''
   0 0 $ raw_vt_@0 goxy c+h [ c render y [ goxy c=.0 10 -~ curxy_vt_''
 :
   goxy x [ reset''
-  f =. FG256_vt_ each FGB__y
-  b =. BG256_vt_ each BGB__y
+  f =. FGvt each FGB__y
+  b =. BGvt each BGB__y
   j =. ,&.>
   s =. f j b j CHB__y
   for_row. s do.
