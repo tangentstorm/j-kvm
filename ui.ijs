@@ -11,7 +11,11 @@ hi_bg =: 7
 
 coclass 'UiWidget' extends 'UiTheme'
 
+create =: ]
+
 XY =: 0 0          NB. location on screen
+H  =: 1            NB. height
+W  =: 1            NB. width
 R  =: 1            NB. need to redraw?
 V  =: 1            NB. visible?
 
