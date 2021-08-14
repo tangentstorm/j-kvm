@@ -14,7 +14,9 @@ create =: {{
 of =: {{ (x,'__y')~ [ y }}"1 0
 
 NB. smudge marks entire screen dirty so we redraw
-smudge =: {{ fill__A 128{a. }}
+smudge =: {{
+  for_w. W do. R__w =: 1 end.
+  fill__A 128{a. }}
 
 render =: {{
   NB. redraw each visible widget that needs a refresh.
