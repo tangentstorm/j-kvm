@@ -8,8 +8,6 @@ create =: {{
   C =: 0           NB. cursor position(s)
   M =: 0           NB. mark(s) (one per cursor)
   W =: 64          NB. width/max length
-  R =: 1           NB. 'needs redraw' flag
-  XY=: 0 0         NB. screen coordinates
   BG=: 8           NB. bg color
   FG=: 7           NB. fg color
   CF=: 0           NB. cursor fg
@@ -28,12 +26,12 @@ fwd =: {{ R=:1 [ C=:>:C }}
 bak =: {{ if. 0<<./C do. R=:1 [ C=:<:C end. }}
 
 render =: {{
-  bgc BG [ fgc FG [ goxy XY
+  cscr'' [ bgc BG [ fgc FG
   NB. draw buffer and extra space:
   puts B,(EX*0>.W-#B)#' '
   NB. draw the cursor:
   fgc CF [ bgc CB
-  ({{ goxy xy [ putc y{B,' '[ goxy xy=.XY+y,0 }} :: ])"0 C
+  ({{ goxy xy [ putc y{B,' '[ goxy xy=.y,0 }} :: ])"0 C
 }}
 
 NB. -- interactive app --
@@ -45,7 +43,7 @@ kc_d =: del
 kc_h =: k_bksp =: bsp
 kc_e =: eol
 kc_b =: bak
-kc_f =: gor
+kc_f =: fwd
 kc_t =: swp
 
 kvm_init =: {{ R =: 1 [ curs 0 }}
