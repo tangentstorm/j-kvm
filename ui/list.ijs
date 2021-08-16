@@ -17,6 +17,8 @@ val =: {{ C { ::a: L }}
 (at0 =: {{ C = 0 }}) `(atz =: {{ C = <: #L }})
 (go0 =: {{ C =: 0 }})`(goz =: {{ C =: <: #L }})
 
+ins =: {{ R=:1 [ L=: }: (<y) C }b#~1+C=i.#b=.L,{.L }}
+
 render =: verb define
   for_vln. H {. S }. L do.  NB. visible lines
     goxy 0,vln_index
