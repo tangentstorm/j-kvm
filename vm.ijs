@@ -27,7 +27,7 @@ vm =: {{
   if. 2|#dat do. dat =. dat,0 end. NB. force even number of rows
   r =.''
   for_row. (,:~2 1) <@(c,~FG24B@[,BG24B@])/;._3 dat do.
-    r =. r, RESET,CEOL,(;row),CRLF
+    r =. r, (;row),RESET,CEOL,CRLF
   end. emit_vm_ r }}
 
 
