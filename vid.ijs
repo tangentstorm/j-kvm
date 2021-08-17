@@ -97,6 +97,70 @@ cocurrent prev
 FGvt =: (FG24B_vt_`(FG256_vt_@-))@.(0&>:)
 BGvt =: (BG24B_vt_`(BG256_vt_@-))@.(0&>:)
 
+vputs =: {{ NB. like 'puts', but process vt escape codes
+  chunks =. CSI_vt_ splitstring y
+  NB. emit non-escaped prefix, if any:
+  if. -. CSI {.@E. y do. chunks =. }. chunks [ puts {. chunks end.
+  for_chunk. }.chunks do.
+    NB. a little state machine to parse the codes
+    NB. regex: ([?]25[hl]) |          (\d+) (;(\d+))* (.) .*
+    NB.    cursor toggle ^ | state: 0->1  -> 2 -> 1 => 3  4
+    if. '?25' {.@E. chunk do. curs (,'l') i. 3 { chunk
+    else.
+      i =. state =. num =. 0 [ nums =. ''
+      while. (state < 4) *. (i < # chunk) do. i =.i+1 [ c =. i { chunk
+        select. state
+        case. 0 do.
+          if. c e. '0123456789' do. i =. i - state =. 1 continue.
+          else. NB. code with no args
+            select. c
+            case. ';' do. nums =. nums, _ NB. e.g. skipping the row in CSI{row};{col}H
+              NB. !! do other terminal emulators actually allow skipping the number?
+            case. 'H' do. go00''
+            case. 'A' do. NB. TODO; move cursor: A=up B=dn C=rt D=lf
+            case. 'J' do. cscr'' NB. TODO: should just be erase downward
+            case. 'K' do. ceol'' end.
+            state =. 4
+          end.
+        case. 1 do. NB. looking at a number
+          if. c e. '0123456789' do. num =. (".c) + 10 * num continue.
+          else. num=.0 [ nums=.nums,num if. c~:';' do. state=.3 [i=.i-1 end. end.
+        case. 2 do. NB. ok. (already handled ; from 0 or 1 and went to state 1)
+        case. 3 do. NB. command char after end of numbers
+          select. c
+          case. 'H' do.
+            if. _ e. nums do. goxy |.(nums = _) } nums,:|.curxy''
+            else. goxy 2{.|.nums end. NB. 2{. to avoid length errors
+          case. 'm' do.
+            while. # nums do.  nums =. }. nums [ num =. {. nums
+              if. num e. 30+i.7 do. fgc num - 30
+              elseif. num e. 40+i.7 do. bgc num - 30
+              elseif. 1 do.
+                select. num
+                case. 0 do. reset''
+                case. 1 do. NB. TODO: 'bold 1'
+                case. 38 do.
+                  select. {. num
+                  case. 5 do. fgc {: nums
+                  case. 2 do. fgx 256 #. }. nums
+                  end.
+                case. 48 do. NB. same thing but for bg.. :/
+                  select. {. num
+                  case. 5 do. bgc {: nums
+                  case. 2 do. bgx 256 #. }. nums
+                  end.
+                end.
+              end.
+            end.
+          case. 'n' do. NB. query cursor position. does it even make sense to do this?
+            if. 6 = {.nums do. puts CSI_vt_,(":yy),';',(":xx) 'xx yy'=.curxy'' end. end.
+          end.
+        end.
+      end.
+      puts i}.chunk
+    end. }}
+
+
 render =: {{ NB. render to vt
   echo@''^:(h =. 0{HW__y) c =. curxy_vt_''
   0 0 $ raw_vt_@0 goxy c+h [ c render y [ goxy c=.0 10 -~ curxy_vt_''
