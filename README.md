@@ -46,7 +46,7 @@ There are actually 24-bit colors available. Enough to run viewmat:
 
 There are three levels to the code here:
 
-`load 'tangentstorm/j-kvm/vt'` to get basic low-level routines for generating VT100/ANSI/xterm escape codes, as well ass platform-specific code for reading individual keypresses from the terminal.
+`load 'tangentstorm/j-kvm/vt'` to get basic low-level routines for generating VT100/ANSI/xterm escape codes, as well as platform-specific code for reading individual keypresses from the terminal.
 
 `load 'tangentstorm/j-kvm/vid'` to work with in-memory 'video buffer' objects, which have separate rank 2 arrays for each character, foreground, and background attribute.
 
