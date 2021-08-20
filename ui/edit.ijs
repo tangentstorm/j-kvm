@@ -17,30 +17,32 @@ create =: {{
 
 NB. buffer editing commands:
 ins =: {{ R=:1[ B=:(C+&#B) {. y (<:C=:>:(+i.@#)C) } (1+C e.~ i.#b)#b=.B,E }}"0
-bsp =: {{ R=:1[ C=:C-1+i.#C[B=:}:b#~-.1|.C e.~i.#b=.B,E }}
 del =: {{ R=:1[ C=:C-i.#C[B=:}:b#~-.C e.~i.#b=.B,E}}
 eol =: {{ R=:1[ C=:C+(#B)->./C }}
 bol =: {{ R=:1[ C=:C-<./C }}
 swp =: {{ R=:1[ B=: a (C-1) } b (C-2) } B [ a=. (C-2) { B [ b=. (C-1) { B }}
-fwd =: {{ R=:1 [ C=:>:C }}
+fwd =: {{ if. (#B)>>./C do. R=:1 [ C=:>:C end. }}
 bak =: {{ if. 0<<./C do. R=:1 [ C=:<:C end. }}
+bsp =: {{ if. 0<<./C do. R=:1[ C=:C-1+i.#C[B=:}:b#~-.1|.C e.~i.#b=.B,E end. }}
 
 render =: {{
   cscr'' [ bgc BG [ fgc FG
   NB. draw buffer and extra space:
   puts B,(EX*0>.W-#B)#' '
   NB. draw the cursor:
-  fgc CF [ bgc CB
-  ({{ goxy xy [ putc y{B,' '[ goxy xy=.y,0 }} :: ])"0 C
-}}
+  if. y do.
+    fgc CF [ bgc CB
+    ({{ goxy xy [ putc y{B,' '[ goxy xy=.y,0 }} :: ])"0 C
+  end. }}
 
 NB. -- interactive app --
 coinsert 'kvm'
 
 kc_m =: {{ break_kvm_=: 1}}
-k_asc =: {{ ins y }}
+k_asc =:ins
 kc_d =: del
-kc_h =: k_bksp =: bsp
+kc_h =: k_bsp =: bsp
+kc_a =: bol
 kc_e =: eol
 kc_b =: bak
 kc_f =: fwd
