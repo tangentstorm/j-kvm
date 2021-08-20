@@ -4,7 +4,7 @@ coclass 'UiApp' extends 'kvm'
 
 create =: {{
   W =: y               NB. list of widget references
-  F =: a:              NB. reference to currently focused widget
+  F =: {.y             NB. reference to currently focused widget
   C =: '' conew 'vid'  NB. canvas for widgets
   B =: '' conew 'vid'  NB. main video buffer
   A =: '' conew 'vid'  NB. alternate frame buffer
