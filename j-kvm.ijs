@@ -32,7 +32,10 @@ onkey =: {{
     NB. TODO: this should be table driven, since different
     NB. terminals have different encodings.
     if. keyp'' do.
-      if. 91 = k2=.>rkey'' do.          NB. 91 = a.i.'['
+      k2=.>rkey''
+      if. k2 e. 97+i.26 do. NB. alt x comes in as esc,x
+        vnm =. 'ka_',k2{a.
+      elseif. 91 = k2 do.          NB. 91 = a.i.'['
         select. k3=.{.>rkey''
         case.  65 do. vnm =. 'k_arup'   NB. CSI,'A'
         case.  66 do. vnm =. 'k_ardn'   NB. CSI,'B'
@@ -75,7 +78,6 @@ onkey =: {{
             end.
           end.
         end.
-        NB. TODO: esc x = alt x
       else.
         NB. echo 'unexpected key after esc:', ":k2
       end.
@@ -94,8 +96,14 @@ onkey =: {{
   elseif. 3=4!:0<'k_any' do. 1[k_any a.{~>y
   elseif. k e. 3 0 do. break_kvm_ =: 1
   end.
-  sp =: putc@' '
-  NB. reset @ ceol (puts ":>coname'') sp puts ": vnm [ sp puts ":y [ echo'' NB.goxy 0 9
+  if. 0 do. NB. keypress debuggger
+    sp =. putc@' '
+    goxy 5 9
+    sp puts ":y
+    sp puts ": vnm
+    reset @ ceol (puts ":>coname'')
+    echo''
+  end.
   0 0$0}}
 
 loop =: {{
