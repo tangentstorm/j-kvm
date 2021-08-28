@@ -22,18 +22,22 @@ bol =: {{ R=:1[ C=:C-<./C }}
 swp =: {{ R=:1[ B=: a (C-1) } b (C-2) } B [ a=. (C-2) { B [ b=. (C-1) { B }}
 for =: {{ if. (#B)>>./C do. R=:1 [ C=:>:C end. }}
 bak =: {{ if. 0<<./C do. R=:1 [ C=:<:C end. }}
-fwd =: {{ while. ((#B)>>./C) > (' ' e. C{B) do. for'' end. }}
-bwd =: {{ while. (0<<./C) > (' ' e. C{B) do. for'' end. }}
+
+atz =: {{y] -. (#B)>>./C }}
+at0 =: {{y] -. 0<<./C }}
+atsp =: ({{y] ' ' e. C{B }}) :: 0
+fwd =: {{ whilst. (atz +: atsp)'' do. for'' end. }}
+bwd =: {{ whilst. (at0 +: atsp)'' do. bak'' end. }}
 bsp =: {{ if. 0<<./C do. R=:1[ C=:C-1+i.#C[B=:}:b#~-.1|.C e.~i.#b=.B,E end. }}
+
+render_cursor =: {{
+  fgx CF [ bgx CB
+  ({{ goxy xy [ putc y{B,' '[ goxy xy=.y,0 }} :: ])"0 C }}
 
 render =: {{
   cscr'' [ bgx BG [ fgx FG
   puts B
-  NB. draw the cursor:
-  if. y do.
-    fgx CF [ bgx CB
-    ({{ goxy xy [ putc y{B,' '[ goxy xy=.y,0 }} :: ])"0 C
-  end. }}
+  render_cursor^:y'' }}
 
 NB. -- interactive app --
 coinsert 'kvm'
