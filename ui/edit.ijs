@@ -8,11 +8,10 @@ create =: {{
   C =: 0           NB. cursor position(s)
   M =: 0           NB. mark(s) (one per cursor)
   W =: 64          NB. width/max length
-  BG=: 8           NB. bg color
-  FG=: 7           NB. fg color
+  BG=: _234        NB. bg color
+  FG=: _7          NB. fg color
   CF=: 0           NB. cursor fg
-  CB=: 9           NB. cursor bg
-  EX=: 1           NB. whether or not to draw extent
+  CB=: _214        NB. cursor bg
 }}
 
 NB. buffer editing commands:
@@ -21,17 +20,18 @@ del =: {{ R=:1[ C=:C-i.#C[B=:}:b#~-.C e.~i.#b=.B,E}}
 eol =: {{ R=:1[ C=:C+(#B)->./C }}
 bol =: {{ R=:1[ C=:C-<./C }}
 swp =: {{ R=:1[ B=: a (C-1) } b (C-2) } B [ a=. (C-2) { B [ b=. (C-1) { B }}
-fwd =: {{ if. (#B)>>./C do. R=:1 [ C=:>:C end. }}
+for =: {{ if. (#B)>>./C do. R=:1 [ C=:>:C end. }}
 bak =: {{ if. 0<<./C do. R=:1 [ C=:<:C end. }}
+fwd =: {{ while. ((#B)>>./C) > (' ' e. C{B) do. for'' end. }}
+bwd =: {{ while. (0<<./C) > (' ' e. C{B) do. for'' end. }}
 bsp =: {{ if. 0<<./C do. R=:1[ C=:C-1+i.#C[B=:}:b#~-.1|.C e.~i.#b=.B,E end. }}
 
 render =: {{
-  cscr'' [ bgc BG [ fgc FG
-  NB. draw buffer and extra space:
-  puts B,(EX*0>.W-#B)#' '
+  cscr'' [ bgx BG [ fgx FG
+  puts B
   NB. draw the cursor:
   if. y do.
-    fgc CF [ bgc CB
+    fgx CF [ bgx CB
     ({{ goxy xy [ putc y{B,' '[ goxy xy=.y,0 }} :: ])"0 C
   end. }}
 
@@ -45,8 +45,10 @@ kc_h =: k_bsp =: bsp
 kc_a =: bol
 kc_e =: eol
 kc_b =: bak
-kc_f =: fwd
+kc_f =: for
 kc_t =: swp
+ka_f =: fwd
+ka_b =: bwd
 
 kvm_init =: {{ R =: 1 [ curs 0 }}
 kvm_done =: {{ curs 1 [ reset'' [ echo'' [ raw 0}}
