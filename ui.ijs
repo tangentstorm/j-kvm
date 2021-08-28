@@ -12,6 +12,7 @@ hi_bg =: 7
 coclass 'UiWidget' extends 'UiTheme'
 
 create =: ]
+render =: ]
 
 XY =: 0 0          NB. location on screen
 H  =: 1            NB. height
