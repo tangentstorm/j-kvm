@@ -35,7 +35,7 @@ render =: {{
   NB. TODO: compare A to B and draw only what has changed.
   jn =. ,&.>
   for_row. (CHB__A ~: CHB__B)+.(FGB__A ~: FGB__B)+.(BGB__A ~: BGB__B) do.
-    if. # I. row do.
+    if. +./ row do.
       goxy 0, ri=.row_index
       f =. FGvt each ri{FGB__B
       b =. BGvt each ri{BGB__B
