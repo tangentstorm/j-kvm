@@ -8,6 +8,7 @@ create =: {{
   C =: 0           NB. cursor position(s)
   M =: 0           NB. mark(s) (one per cursor)
   W =: 64          NB. width/max length
+  LOG =: 0$a:     NB. macro recorder history
   BG=: _234        NB. bg color
   FG=: _7          NB. fg color
   CF=: 0           NB. cursor fg
@@ -42,17 +43,23 @@ render =: {{
 NB. -- interactive app --
 coinsert 'kvm'
 
+LOG =: ''
+log =: {{ LOG =: LOG,<y }}
 kc_m =: {{ break_kvm_=: 1}}
-k_asc =:ins
-kc_d =: del
-kc_h =: k_bsp =: bsp
-kc_a =: bol
-kc_e =: eol
-kc_b =: bak
-kc_f =: for
-kc_t =: swp
-ka_f =: fwd
-ka_b =: bwd
+
+k_asc =: {{log '?',y,'?' }} [ ins
+kc_d =: log@'x' @ del
+kc_h =: k_bsp =: log@'X' @ bsp
+kc_a =: log@'0' @ bol
+kc_e =: log@'$' @ eol
+kc_b =: log@'h' @ bak
+kc_f =: log@'l' @ fro
+kc_t =: log@'T' @ swp  NB. TODO what does T do in vim? better code?
+ka_f =: log@'w' @ fwd
+ka_b =: log@'b' @ bwd
+
+mi =: {{ y {~ I. -.@(+. _1&|.) '??' E.y }} NB. merge inserts
+getlog =: {{ mi ; LOG }}
 
 kvm_init =: {{ R =: 1 [ curs 0 }}
 kvm_done =: {{ curs 1 [ reset'' [ echo'' [ raw 0}}
