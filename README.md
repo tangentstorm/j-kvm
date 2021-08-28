@@ -58,6 +58,7 @@ The event handlers are simple functions that handle individual keypresses:
   * `k_a` handles 'a'
   * `k_A` handles shift+'a'
   * `kc_a` handles control+'a'
+  * `ka_a` handles alt+'a'
   * other key handlers:
     * `k_arup`, `k_ardn`, `k_arlf`, `k_arrt` (arrow keys)
     * `k_home`, `k_pgup`, `k_pgdn`, `k_ins`, `k_del`, `k_bksp`
