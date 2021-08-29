@@ -28,15 +28,20 @@ fgc  =: {{ fgc__term y }}
 bgc  =: {{ bgc__term y }}
 fgx  =: {{ fgx__term y }}
 bgx  =: {{ bgx__term y }}
+fg   =: {{ fg__term y }}
+bg   =: {{ bg__term y }}
 reset=: {{ reset__term y }}
 
 prev =. ([ coclass@'vid') coname''
 create =: init@|.
 
-fgx   =: {{ FG =: y }}
-bgx   =: {{ BG =: y }}
-fgc   =: {{ FG =: -y }}
-bgc   =: {{ BG =: -y }}
+fgx =: {{ FG =: y }}
+bgx =: {{ BG =: y }}
+fgc =: {{ FG =: -y }}
+bgc =: {{ BG =: -y }}
+fg  =: fgx`(fgc@-)@.(0&>:)
+bg  =: bgx`(bgc@-)@.(0&>:)
+
 goxy  =: {{ XY =: y }}
 go00  =: goxy@0 0
 reset =: fgc@7@bgc@0
@@ -93,9 +98,6 @@ blit =: {{ NB. xy blit__self src. stamp y onto self at xy.
   0 0$0}}
 
 cocurrent prev
-
-FGvt =: (FG24B_vt_`(FG256_vt_@-))@.(0&>:)
-BGvt =: (BG24B_vt_`(BG256_vt_@-))@.(0&>:)
 
 vputs =: {{ NB. like 'puts', but process vt escape codes
   chunks =. CSI_vt_ splitstring y

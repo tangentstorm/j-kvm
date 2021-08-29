@@ -67,6 +67,10 @@ NB. FG24B y ->str.
 FG24B=: CSI,'38;2;', 'm',~ [: rplc&(' ';';')@": (3#256)&#:
 BG24B=: CSI,'48;2;', 'm',~ [: rplc&(' ';';')@": (3#256)&#:
 
+NB. Main interface: select 24-bit color if positive, 8-bit if neg
+FGC =: (FG24B_vt_`(FG256_vt_@-))@.(0&>:)
+BGC =: (BG24B_vt_`(BG256_vt_@-))@.(0&>:)
+
 NB. GOXY[X,Y]->str: code to set cursor position
 GOXY =: [: (CSI, ":@{:, ';', 'f',~ ":@{.) D00+]
 
@@ -193,6 +197,9 @@ fgc =: puts@FG256
 bgc =: puts@BG256
 fgx =: puts@FG24B
 bgx =: puts@BG24B
+
+fg =: puts@FGC
+bg =: puts@BGC
 reset=: puts@RESET
 
 NB. these two are just handy to type when your screen gets messy:
