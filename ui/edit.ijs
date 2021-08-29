@@ -8,16 +8,24 @@ create =: {{
   C =: 0           NB. cursor position(s)
   M =: 0           NB. mark(s) (one per cursor)
   W =: 64          NB. width/max length
-  LOG =: 0$a:     NB. macro recorder history
   BG=: _234        NB. bg color
   FG=: _7          NB. fg color
   CF=: 0           NB. cursor fg
   CB=: _214        NB. cursor bg
+  MODE =: 'n'      NB. MODE e. 'niq'  : navigate, insert, quote
+  LOG =: 0$a:      NB. macro recorder history
 }}
 
-NB. buffer editing commands:
-ins =: {{ R=:1[ B=:(C+&#B) {. y (<:C=:>:(+i.@#)C) } (1+C e.~ i.#b)#b=.B,E }}"0
-del =: {{ R=:1[ C=:C-i.#C[B=:}:b#~-.C e.~i.#b=.B,E}}
+ins =: {{
+  tmp =. (1+C e.~ i.#b)#b=.B,E
+  inspos =. <:C=:>:(+i.@#)C  NB. move all cursors forward
+  newlen =. C+&#B
+  R=:1 [ B=: newlen {. y inspos } tmp }}"0
+
+NB. !! maybe factor out 'tmp' here, as above in 'ins'?
+del =: {{ R=:1[ C=:C-i.#C[B=:}: (1-C e.~ i.#b)#b=.B,E }}
+bsp =: del@bak
+
 eol =: {{ R=:1[ C=:C+(#B)->./C }}
 bol =: {{ R=:1[ C=:C-<./C }}
 swp =: {{ R=:1[ B=: a (C-1) } b (C-2) } B [ a=. (C-2) { B [ b=. (C-1) { B }}
@@ -29,16 +37,47 @@ at0 =: {{y] -. 0<<./C }}
 atsp =: ({{y] ' ' e. C{B }}) :: 0
 fwd =: {{ whilst. (atz +: atsp)'' do. for'' end. }}
 bwd =: {{ whilst. (at0 +: atsp)'' do. bak'' end. }}
-bsp =: {{ if. 0<<./C do. R=:1[ C=:C-1+i.#C[B=:}:b#~-.1|.C e.~i.#b=.B,E end. }}
 
 render_cursor =: {{
-  fgx CF [ bgx CB
-  ({{ goxy xy [ putc y{B,' '[ goxy xy=.y,0 }} :: ])"0 C }}
+  fg CF [ bg CB
+  ({{ goxy xy [ putc y{B,E [ goxy xy=.y,0 }} :: ])"0 C }}
 
 render =: {{
-  cscr'' [ bgx BG [ fgx FG
+  cscr'' [ bg BG [ fg FG
   puts B
-  render_cursor^:y'' }}
+  render_cursor ''
+  bg BG [ fg FG  }}
+
+do =: {{
+  NB. this provides a little language for animating the editors.
+  NB. execute a series of actions on the token editor
+  i=.0 [ q =. '?'  NB. quote char. '?' is rare symbol in j
+  refresh =. echo@''@render@1  NB. TODO: remove this
+  refresh''
+  for_c. y do. i =. c_index
+    select. MODE
+    fcase. 'q' do.
+      if. c = q do. ins q [ MODE =: 'i' continue.
+      else. MODE=:'n' end. NB. and fall through
+    case. 'n' do.
+      select. c
+      case. '?' do. MODE =: 'i'
+      case. 'b' do. bwd''
+      case. 'h' do. bak''
+      case. '$' do. eol''
+      case. 'X' do. bsp''
+      NB. case. '!' do. eval''
+      end.
+    case. 'i' do.
+      if. c = q do. MODE =: 'q'
+      else. ins c end.
+    end.
+    sleep 100+?20
+    refresh''
+  end.
+  if. MODE = 'q' do. MODE =: 'n' end.
+  refresh''
+  0 0 $ 0}}
 
 NB. -- interactive app --
 coinsert 'kvm'
