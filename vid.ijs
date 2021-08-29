@@ -168,8 +168,8 @@ render =: {{ NB. render to vt
   0 0 $ raw_vt_@0 goxy c+h [ c render y [ goxy c=.0 10 -~ curxy_vt_''
 :
   goxy x [ reset''
-  f =. FGvt each FGB__y
-  b =. BGvt each BGB__y
+  f =. FGC each FGB__y
+  b =. BGC each BGB__y
   j =. ,&.>
   s =. f j b j CHB__y
   for_row. s do.
