@@ -72,7 +72,7 @@ do =: {{
       if. c = q do. MODE =: 'q'
       else. ins c end.
     end.
-    sleep 100+?20
+    sleep 15+?20
     refresh''
   end.
   if. MODE = 'q' do. MODE =: 'n' end.
@@ -92,7 +92,7 @@ kc_h =: k_bsp =: log@'X' @ bsp
 kc_a =: log@'0' @ bol
 kc_e =: log@'$' @ eol
 kc_b =: log@'h' @ bak
-kc_f =: log@'l' @ fro
+kc_f =: log@'l' @ for
 kc_t =: log@'T' @ swp  NB. TODO what does T do in vim? better code?
 ka_f =: log@'w' @ fwd
 ka_b =: log@'b' @ bwd
