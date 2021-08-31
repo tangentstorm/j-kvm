@@ -14,6 +14,7 @@ create =: {{
   CB=: _214        NB. cursor bg
   MODE =: 'n'      NB. MODE e. 'niq'  : navigate, insert, quote
   LOG =: 0$a:      NB. macro recorder history
+  TS  =: 0$0       NB. timestamps for the log
 }}
 
 ins =: {{
@@ -48,6 +49,8 @@ render =: {{
   render_cursor ''
   bg BG [ fg FG  }}
 
+
+
 do =: {{
   NB. this provides a little language for animating the editors.
   NB. execute a series of actions on the token editor
@@ -64,9 +67,14 @@ do =: {{
       case. '?' do. MODE =: 'i'
       case. 'b' do. bwd''
       case. 'h' do. bak''
+      case. '0' do. bol''
       case. '$' do. eol''
       case. 'X' do. bsp''
-      NB. case. '!' do. eval''
+      case. 'x' do. del''
+      case. 'w' do. fwd''
+      case. 'l' do. for''
+      case. 'T' do. swp''
+        NB. case. '!' do. eval''
       end.
     case. 'i' do.
       if. c = q do. MODE =: 'q'
@@ -77,13 +85,14 @@ do =: {{
   end.
   if. MODE = 'q' do. MODE =: 'n' end.
   refresh''
-  0 0 $ 0}}
+  0 0 $ 0 }}
 
 NB. -- interactive app --
 coinsert 'kvm'
 
-LOG =: ''
-log =: {{ LOG =: LOG,<y }}
+now =: 6!:1
+log =: {{ TS =: TS,now'' [ LOG =: LOG,<y }}
+
 kc_m =: {{ break_kvm_=: 1}}
 
 k_asc =: {{log '?',y,'?' }} [ ins
@@ -98,7 +107,10 @@ ka_f =: log@'w' @ fwd
 ka_b =: log@'b' @ bwd
 
 mi =: {{ y {~ I. -.@(+. _1&|.) '??' E.y }} NB. merge inserts
-getlog =: {{ mi ; LOG }}
+gettimes =: {{
+  q=.5 NB. quantization factor
+  <.q^.100*2-~/\TS }}
+getlog =: {{ mi ;<@;"1 LOG ,.~ (#&'_') each 0,gettimes'' }}
 
 kvm_init =: {{ R =: 1 [ curs 0 }}
 kvm_done =: {{ curs 1 [ reset'' [ echo'' [ raw 0}}
