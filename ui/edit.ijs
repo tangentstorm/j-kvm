@@ -12,9 +12,11 @@ create =: {{
   FG=: _7          NB. fg color
   CF=: 0           NB. cursor fg
   CB=: _214        NB. cursor bg
-  MODE =: 'n'      NB. MODE e. 'niq'  : navigate, insert, quote
+  MODE =: 'n'      NB. MODE e. 'niq'  : 'n'avigate, 'i'nsert, 'q'uote
   LOG =: 0$a:      NB. macro recorder history
   TS  =: 0$0       NB. timestamps for the log
+  MACRO =: ''      NB. the macro we are playing
+  I =: _1          NB. the index into macro / instruction pointer
 }}
 
 ins =: {{
@@ -50,17 +52,21 @@ render =: {{
   bg BG [ fg FG  }}
 
 
-
 do =: {{
+  MACRO =: y NB. the macro to play
+  A =: 1 NB. start animation mode
+  I =: 0 NB. the index into macro / instruction pointer
+}}
+
+update =: {{
   NB. this provides a little language for animating the editors.
   NB. execute a series of actions on the token editor
-  i=.0 [ q =. '?'  NB. quote char. '?' is rare symbol in j
-  refresh =. echo@''@render@1  NB. TODO: remove this
-  refresh''
-  for_c. y do. i =. c_index
+  q =. '?'  NB. quote char. '?' is rare symbol in j
+  if. I < # MACRO do.
+    c =. I{MACRO
     select. MODE
     fcase. 'q' do.
-      if. c = q do. ins q [ MODE =: 'i' continue.
+      if. c = q do. ins q [ MODE =: 'i' return.
       else. MODE=:'n' end. NB. and fall through
     case. 'n' do.
       select. c
@@ -81,11 +87,9 @@ do =: {{
       else. ins c end.
     end.
     sleep 15+?20
-    refresh''
-  end.
-  if. MODE = 'q' do. MODE =: 'n' end.
-  refresh''
-  0 0 $ 0 }}
+    R =: 1 [ I =: I + 1
+  else. A =: 0 end.
+  if. MODE = 'q' do. MODE =: 'n' end. }}
 
 NB. -- interactive app --
 coinsert 'kvm'
