@@ -2,6 +2,9 @@ NB. ui application
 
 coclass 'UiApp' extends 'kvm'
 
+now =: 6!:1
+then=: now''
+
 create =: {{
   W =: y               NB. list of widget references
   F =: {.y             NB. reference to currently focused widget
@@ -17,6 +20,13 @@ NB. smudge marks entire screen dirty so we redraw
 smudge =: {{
   for_w. W do. R__w =: 1 end.
   fill__A 128{a. }}
+
+update =: {{
+  NB. update gets the number of seconds since last frame
+  delta =. (then =: now'')-then
+  for_w. W #~ 'A' of W do.
+    update__w delta
+  end. }}
 
 render =: {{
   NB. redraw each visible widget that needs a refresh.
@@ -44,3 +54,5 @@ render =: {{
     end.
   end.
   0 0 $ copyto__A B }}
+
+step =: render@update
