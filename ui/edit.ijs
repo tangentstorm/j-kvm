@@ -17,7 +17,13 @@ create =: {{
   TS  =: 0$0       NB. timestamps for the log
   MACRO =: ''      NB. the macro we are playing
   I =: _1          NB. the index into macro / instruction pointer
+  T =: 0           NB. time counter
+  KPS =: 12.2      NB. typing speed (keystrokes per second)
+  TSV =: %(10*KPS) NB. random modifier for typing speed (in seconds per keystroke)
+  NEXT =: 0        NB. time for next keypress/macro event
 }}
+
+
 
 ins =: {{
   tmp =. (1+C e.~ i.#b)#b=.B,E
@@ -52,13 +58,26 @@ render =: {{
   bg BG [ fg FG  }}
 
 
-do =: {{
+do =: {{ NB. queue macro y for playback
   MACRO =: y NB. the macro to play
+  NEXT =: 0 NB. start immediately
+  T =: 0 NB. start the timer
   A =: 1 NB. start animation mode
   I =: 0 NB. the index into macro / instruction pointer
 }}
 
+( 0 : 0 )
+  y = seconds since last tick
+  T = seconds since last keypress (sum of y over animation frames)
+  NEXT = seconds between last keypress and next keypress
+  KPS = keystrokes per second
+  %KPS = seconds per keystroke
+  TSV = some random term added to %KPS (in seconds per keystroke)
+)
+
 update =: {{
+  if. (T =: T + y) < NEXT do. return. end.
+  T =: 0 [ NEXT =: (TSV*?0) + %KPS NB. schedule next keypress
   NB. this provides a little language for animating the editors.
   NB. execute a series of actions on the token editor
   q =. '?'  NB. quote char. '?' is rare symbol in j
@@ -86,7 +105,6 @@ update =: {{
       if. c = q do. MODE =: 'q'
       else. ins c end.
     end.
-    sleep 15+?20
     R =: 1 [ I =: I + 1
   else. A =: 0 end.
   if. MODE = 'q' do. MODE =: 'n' end. }}
