@@ -70,9 +70,14 @@ chxy =: 'CHB' pepo
 NB. write to ram
 NB. putc =: {{ (y chxy])`(FG fgxy ])`(BG bgxy ])`:0 XY }}
 putc =: {{
-  y chxy XY [ FG fgxy XY [ BG bgxy XY
-  if. 0={. XY =: WH|XY + 1 0 do.  XY =: 0,1+{:XY end. }}
-puts =: putc"0
+  select. y
+  case. CR do. XY=:0,1{XY
+  case. LF do. XY=:XY + 0 1
+  case. do.
+    y chxy XY [ FG fgxy XY [ BG bgxy XY
+    if. 0={. XY =: WH|XY + 1 0 do.  XY =: 0,1+{:XY end.
+  end. }}
+puts =: putc"0^:(*@#)
 
 rnd =: {{
   CHB =: u:a.{~97+?HW$26
@@ -102,17 +107,18 @@ cocurrent prev
 vputs =: {{ NB. like 'puts', but process vt escape codes
   chunks =. CSI_vt_ splitstring y
   NB. emit non-escaped prefix, if any:
-  if. -. CSI {.@E. y do. chunks =. }. chunks [ puts {. chunks end.
-  for_chunk. }.chunks do.
+  if. -. CSI {.@E. y do. chunks =. }. chunks [ puts > {. chunks end.
+  for_bchunk. }.chunks do. chunk =. >bchunk
     NB. a little state machine to parse the codes
-    NB. regex: ([?]25[hl]) |          (\d+) (;(\d+))* (.) .*
-    NB.    cursor toggle ^ | state: 0->1  -> 2 -> 1 => 3  4
+    NB. regex: ([?]25[hl]) |          (\d+(;(\d+))*)? (.) .*
+    NB.    cursor toggle ^ | state: 0->1-> 2 -> 1   => 3  4
     if. '?25' {.@E. chunk do. curs (,'l') i. 3 { chunk
     else.
       i =. state =. num =. 0 [ nums =. ''
       while. (state < 4) *. (i < # chunk) do. i =.i+1 [ c =. i { chunk
         select. state
         case. 0 do.
+          NB. if we see a digit, move to state 1 and parse whole number
           if. c e. '0123456789' do. i =. i - state =. 1 continue.
           else. NB. code with no args
             select. c
@@ -129,28 +135,35 @@ vputs =: {{ NB. like 'puts', but process vt escape codes
           else. num=.0 [ nums=.nums,num if. c~:';' do. state=.3 [i=.i-1 end. end.
         case. 2 do. NB. ok. (already handled ; from 0 or 1 and went to state 1)
         case. 3 do. NB. command char after end of numbers
+          NB. we only ever consume 1 'command' character in state 3.
+          NB. then we are done with the code and can move on to output
+          state =. 4
           select. c
           case. 'H' do.
             if. _ e. nums do. goxy |.(nums = _) } nums,:|.curxy''
             else. goxy 2{.|.nums end. NB. 2{. to avoid length errors
-          case. 'm' do.
+          case. 'm' do. NB. color control codes
+            NB. consume one at a time because there can be codes like 0 or 1
+            NB. followed by fg/bg colors which take different numbers of arguments
+            NB. ex: CSI,'0;1;41;32m' bright green on red. (truly beautiful :/)
             while. # nums do.  nums =. }. nums [ num =. {. nums
               if. num e. 30+i.7 do. fgc num - 30
-              elseif. num e. 40+i.7 do. bgc num - 30
-              elseif. 1 do.
+              elseif. num e. 40+i.7 do. bgc num - 40
+              elseif. do. NB. 'else' :(
+                echo 'color code. num:'; num; 'nums:';nums
                 select. num
                 case. 0 do. reset''
                 case. 1 do. NB. TODO: 'bold 1'
                 case. 38 do.
-                  select. {. num
+                  select. {. nums
                   case. 5 do. fgc {: nums
                   case. 2 do. fgx 256 #. }. nums
-                  end.
+                  end. nums =. ''
                 case. 48 do. NB. same thing but for bg.. :/
-                  select. {. num
+                  select. {. nums
                   case. 5 do. bgc {: nums
                   case. 2 do. bgx 256 #. }. nums
-                  end.
+                  end. nums =. ''
                 end.
               end.
             end.
@@ -159,9 +172,8 @@ vputs =: {{ NB. like 'puts', but process vt escape codes
           end.
         end.
       end.
-      puts i}.chunk
+      puts 7 u: i}.chunk
     end. }}
-
 
 render =: {{ NB. render to vt
   echo@''^:(h =. 0{HW__y) c =. curxy_vt_''
