@@ -107,8 +107,8 @@ cocurrent prev
 vputs =: {{ NB. like 'puts', but process vt escape codes
   chunks =. CSI_vt_ splitstring y
   NB. emit non-escaped prefix, if any:
-  if. -. CSI {.@E. y do. chunks =. }. chunks [ puts > {. chunks end.
-  for_bchunk. }.chunks do. chunk =. >bchunk
+  if. -. CSI {.@E. y do. chunks =. }. chunks [ puts 7 u: > {. chunks end.
+  for_bchunk. chunks do. chunk =. >bchunk
     NB. a little state machine to parse the codes
     NB. regex: ([?]25[hl]) |          (\d+(;(\d+))*)? (.) .*
     NB.    cursor toggle ^ | state: 0->1-> 2 -> 1   => 3  4
@@ -150,7 +150,6 @@ vputs =: {{ NB. like 'puts', but process vt escape codes
               if. num e. 30+i.7 do. fgc num - 30
               elseif. num e. 40+i.7 do. bgc num - 40
               elseif. do. NB. 'else' :(
-                echo 'color code. num:'; num; 'nums:';nums
                 select. num
                 case. 0 do. reset''
                 case. 1 do. NB. TODO: 'bold 1'
