@@ -54,7 +54,7 @@ render_cursor =: {{
   ({{ goxy xy [ putc y{B,E [ goxy xy=.y,0 }} :: ])"0 C }}
 
 render =: {{
-  cscr'' [ bg BG [ fg FG
+  bg BG [ fg FG
   puts B
   render_cursor ''
   bg BG [ fg FG  }}
