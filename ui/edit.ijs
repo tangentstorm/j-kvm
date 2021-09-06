@@ -3,18 +3,12 @@ NB. simple abstract editor
 coclass 'UiEditWidget' extends 'UiWidget'
 
 create =: {{
-  B =: y           NB. the buffer to edit.
-  E=: {.@(0&$) B   NB. empty element (temp used when appending a value at the end)
-  C =: 0           NB. cursor position(s)
-  M =: 0           NB. mark(s) (one per cursor)
+  setval y
   W =: 64          NB. width/max length
   BG=: _234        NB. bg color
   FG=: _7          NB. fg color
   CF=: 0           NB. cursor fg
   CB=: _214        NB. cursor bg
-  MODE =: 'n'      NB. MODE e. 'niq'  : 'n'avigate, 'i'nsert, 'q'uote
-  LOG =: 0$a:      NB. macro recorder history
-  TS  =: 0$0       NB. timestamps for the log
   MACRO =: ''      NB. the macro we are playing
   I =: _1          NB. the index into macro / instruction pointer
   T =: 0           NB. time counter
@@ -23,7 +17,15 @@ create =: {{
   NEXT =: 0        NB. time for next keypress/macro event
 }}
 
-
+setval =: {{
+  B =: y           NB. the buffer to edit.
+  E=: {.@(0&$) B   NB. empty element (temp used when appending a value at the end)
+  C =: 0           NB. cursor position(s)
+  M =: 0           NB. mark(s) (one per cursor)
+  MODE =: 'n'      NB. MODE e. 'niq'  : 'n'avigate, 'i'nsert, 'q'uote
+  LOG =: 0$a:      NB. macro recorder history
+  TS  =: 0$0       NB. timestamps for the log
+}}
 
 ins =: {{
   tmp =. (1+C e.~ i.#b)#b=.B,E
