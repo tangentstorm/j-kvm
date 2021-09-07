@@ -34,11 +34,11 @@ There are actually 24-bit colors available. Enough to run viewmat:
 
      load'tangentstorm/j-kvm/vid'
 
-     NB. render a buffer of randomly colored characters
+     NB. blit a buffer of randomly colored characters
      buf =: (|.hw=:<. -: gethw_vt_'') conew 'vid'
      CHB__buf =: a. {~ 32 + ? hw $ 95
      FGB__buf =: ? hw $ 256
-     echo'' [ 30 10 render buf
+     echo'' [ 30 10 blit buf
 
 <img src="demo_vid.png" height="640">
 
@@ -65,11 +65,4 @@ The event handlers are simple functions that handle individual keypresses:
     * `k_f1`, `k_f2`,.. (for function keys)
     * `k_sf1`, `k_sf2`,.. (shifted function keys)
 
-The APIs for  `vt` and `vid` are the same. The intent is that you can draw everything to video buffers (composing multiple buffers however you like), and then `render` the final buffer with all the escape codes.
-
-## Work to be Done
-
-- add a small library of standard widgets (menus, text input buffers, etc..)
-- push/pop for `vid` buffers
-- render/compose `vid` buffers.
-- handle alt+key
+The APIs for  `vt` and `vid` are the same. The intent is that you can draw everything to video buffers (composing multiple buffers however you like), and then `blit` the final buffer with all the escape codes.

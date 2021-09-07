@@ -18,6 +18,7 @@ stack =: ''
 pushterm =: {{ term_kvm_ =: y [ stack_kvm_ =: term_kvm_,stack_kvm_ }}
 popterm =: {{ stack_kvm_ =: }.stack_kvm_ [ term_kvm_ =: {.stack_kvm_ }}
 
+blit =: {{ x blit__term y }}
 cscr =: {{ cscr__term y }}
 ceol =: {{ ceol__term y }}
 putc =: {{ putc__term y }}
@@ -31,6 +32,8 @@ bgx  =: {{ bgx__term y }}
 fg   =: {{ fg__term y }}
 bg   =: {{ bg__term y }}
 reset=: {{ reset__term y }}
+curs =: curs_vt_
+sleep =: sleep_vt_
 
 prev =. ([ coclass@'vid') coname''
 create =: init@|.
@@ -174,13 +177,13 @@ vputs =: {{ NB. like 'puts', but process vt escape codes
       puts 7 u: i}.chunk
     end. }}
 
-render =: {{ NB. render to vt
+blit =: {{ NB. blit to vt
   echo@''^:(h =. 0{HW__y) c =. curxy_vt_''
-  0 0 $ raw_vt_@0 goxy c+h [ c render y [ goxy c=.0 10 -~ curxy_vt_''
+  0 0 $ raw_vt_@0 goxy c+h [ c blit y [ goxy c=.0 10 -~ curxy_vt_''
 :
   goxy x [ reset''
-  f =. FGC each FGB__y
-  b =. BGC each BGB__y
+  f =. FGC_vt_ each FGB__y
+  b =. BGC_vt_ each BGB__y
   j =. ,&.>
   s =. f j b j CHB__y
   for_row. s do.
@@ -189,7 +192,7 @@ render =: {{ NB. render to vt
   end. }}
 
 rndscr =: {{
-  x render rnd__vid [ vid =. 32 10 conew'vid'
+  x blit rnd__vid [ vid =. 32 10 conew'vid'
   codestroy__vid''
   echo ''[reset''[ raw_vt_ 0}}
 
@@ -197,6 +200,6 @@ rndscr =: {{
 demo =: {{
   curs 0 [ b =. 64 10 conew 'vid'
   for_c. 20$ '/-+\|' do.
-    10 5 render b [ fill__b c [ sleep 50
-  end. curs@1 codestroy__b''
-  10 5 rndscr^:25''}}
+    10 5 blit b [ fill__b c [ sleep 50
+  end. codestroy__b''
+  curs@1 [ 10 5 rndscr^:25''}}
