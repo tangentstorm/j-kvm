@@ -37,6 +37,7 @@ NB. !! maybe factor out 'tmp' here, as above in 'ins'?
 del =: {{ R=:1[ C=:C-i.#C[B=:}: (1-C e.~ i.#b)#b=.B,E }}
 bsp =: del@bak
 
+keol =: {{ R=:1[ B =: (C=:{.C) {. B }} NB. collapse cursors,kill to eol
 eol =: {{ R=:1[ C=:C+(#B)->./C }}
 bol =: {{ R=:1[ C=:C-<./C }}
 swp =: {{ R=:1[ B=: a (C-1) } b (C-2) } B [ a=. (C-2) { B [ b=. (C-1) { B }}
@@ -96,6 +97,7 @@ update =: {{
       case. 'h' do. bak''
       case. '0' do. bol''
       case. '$' do. eol''
+      case. 'K' do. keol''  NB. TODO: 'd$' is the correct macro
       case. 'X' do. bsp''
       case. 'x' do. del''
       case. 'w' do. fwd''
@@ -124,6 +126,7 @@ kc_d =: log@'x' @ del
 kc_h =: k_bsp =: log@'X' @ bsp
 kc_a =: log@'0' @ bol
 kc_e =: log@'$' @ eol
+kc_k =: log@'K' @ keol
 kc_b =: log@'h' @ bak
 kc_f =: log@'l' @ for
 kc_t =: log@'T' @ swp  NB. TODO what does T do in vim? better code?
