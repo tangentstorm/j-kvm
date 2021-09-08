@@ -15,6 +15,14 @@ create =: ]
 render =: ]
 update =: ]
 
+termdraw =: {{ NB. y is hasfocus (same arg as render)
+  buf =. (W,H) conew 'vid'
+  pushterm buf
+  render y
+  popterm''
+  XY blit buf
+  0 0 $ codestroy__buf'' }}
+
 XY =: 0 0          NB. location on screen
 H  =: 1            NB. height
 W  =: 1            NB. width
