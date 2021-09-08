@@ -36,7 +36,7 @@ curs =: curs_vt_
 sleep =: sleep_vt_
 
 prev =. ([ coclass@'vid') coname''
-create =: init@|.
+create =: init@|.  NB. (W,H) conew 'vid'
 
 fgx =: {{ FG =: y }}
 bgx =: {{ BG =: y }}
@@ -177,7 +177,7 @@ vputs =: {{ NB. like 'puts', but process vt escape codes
       puts 7 u: i}.chunk
     end. }}
 
-blit =: {{ NB. blit to vt
+blit_vt_ =: {{ NB. blit to vt
   echo@''^:(h =. 0{HW__y) c =. curxy_vt_''
   0 0 $ raw_vt_@0 goxy c+h [ c blit y [ goxy c=.0 10 -~ curxy_vt_''
 :
