@@ -24,7 +24,8 @@ setval =: {{
   M =: 0           NB. mark(s) (one per cursor)
   MODE =: 'n'      NB. MODE e. 'niq'  : 'n'avigate, 'i'nsert, 'q'uote
   LOG =: 0$a:      NB. macro recorder history
-  TS  =: 0$0       NB. timestamps for the log
+  TS =: 0$0        NB. timestamps for the log
+  R =: 1           NB. set redraw flag
 }}
 
 ins =: {{
