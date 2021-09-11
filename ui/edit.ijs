@@ -13,13 +13,13 @@ create =: {{
   I =: _1          NB. the index into macro / instruction pointer
   T =: 0           NB. time counter
   KPS =: 12.2      NB. typing speed (keystrokes per second)
-  TSV =: %(10*KPS) NB. random modifier for typing speed (in seconds per keystroke)
+  TSV =: %(10*KPS) NB. random modifier for typing speed (in seconds/key)
   NEXT =: 0        NB. time for next keypress/macro event
 }}
 
 setval =: {{
   B =: y           NB. the buffer to edit.
-  E=: {.@(0&$) B   NB. empty element (temp used when appending a value at the end)
+  E=: {.@(0&$) B   NB. empty element (temp used when appending a value)
   C =: #B          NB. cursor position(s)
   M =: 0           NB. mark(s) (one per cursor)
   MODE =: 'n'      NB. MODE e. 'niq'  : 'n'avigate, 'i'nsert, 'q'uote
@@ -27,6 +27,12 @@ setval =: {{
   TS =: 0$0        NB. timestamps for the log
   R =: 1           NB. set redraw flag
 }}
+
+getstate =: {{ C;B;M;MODE }}
+setstate =: {{)v
+  'c b m mode' =. y
+  setval b
+  0 0 $ C =: c [ M =: m [ MODE =: mode }}
 
 ins =: {{
   tmp =. (1+C e.~ i.#b)#b=.B,E
