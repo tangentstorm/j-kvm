@@ -22,10 +22,15 @@ del =: {{ R=:1 [ L=: L#~-.C=i.#L }}
 
 render =: verb define
   for_vln. H {. S }. L do.  NB. visible lines
-    goxy 0,vln_index
-    hi =. (C=S+vln_index)
-    fgc hi pick tx_fg;hi_fg
-    bgc hi pick tx_bg;hi_bg
+    goxy 0,i=.vln_index
+    hi =. (C=S+i)
+    if. y do.
+      fg hi pick TX_FG;CU_FG
+      bg hi pick TX_BG;CU_BG
+    else.
+      fg hi pick TX_FG;HI_FG
+      bg hi pick TX_BG;HI_BG
+    end.
     if. vln -: a: do. puts W#' '
     else. puts W{.>vln end.
   end.

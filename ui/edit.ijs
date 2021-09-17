@@ -7,8 +7,6 @@ create =: {{
   W =: 64          NB. width/max length
   BG=: _234        NB. bg color
   FG=: _7          NB. fg color
-  CF=: 0           NB. cursor fg
-  CB=: _214        NB. cursor bg
   MACRO =: ''      NB. the macro we are playing
   I =: _1          NB. the index into macro / instruction pointer
   T =: 0           NB. time counter
@@ -58,13 +56,13 @@ fwd =: {{ whilst. (atz +: atsp)'' do. for'' end. }}
 bwd =: {{ whilst. (at0 +: atsp)'' do. bak'' end. }}
 
 render_cursor =: {{
-  fg CF [ bg CB
+  if. y do. fg CU_FG [ bg CU_BG else. fg HI_FG [ bg HI_BG  end.
   ({{ goxy xy [ putc y{B,E [ goxy xy=.y,0 }} :: ])"0 C }}
 
 render =: {{
   bg BG [ fg FG
   puts B
-  render_cursor ''
+  render_cursor y
   bg BG [ fg FG  }}
 
 

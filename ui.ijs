@@ -4,10 +4,18 @@ extends_z_ =: {{ x [ coinsert y [ cocurrent x }}
 
 cocurrent 'UiTheme' extends 'kvm'
 
-tx_fg =: 7
-tx_bg =: 0
-hi_fg =: 0
-hi_bg =: 7
+NB. TX = plain text color
+TX_FG =: _7
+TX_BG =: 0
+
+NB. HI = hilight color (unfocused cursor)
+HI_FG =: 0
+HI_BG =: _7
+
+NB. CU = focused cursor
+CU_FG =: 0
+CU_BG =: _214
+
 
 coclass 'UiWidget' extends 'UiTheme'
 
