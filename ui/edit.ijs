@@ -9,10 +9,10 @@ create =: {{
   FG=: _7          NB. fg color
   MACRO =: ''      NB. the macro we are playing
   I =: _1          NB. the index into macro / instruction pointer
-  T =: 0           NB. time counter
+  T =: 0           NB. timer. seconds since last key (sum of time delta from update verb)
   KPS =: 12.2      NB. typing speed (keystrokes per second)
-  TSV =: %(10*KPS) NB. random modifier for typing speed (in seconds/key)
-  NEXT =: 0        NB. time for next keypress/macro event
+  TSV =: %(10*KPS) NB. max delay for random modifier for typing speed (in seconds/key)
+  NEXT =: 0        NB. time for next keypress/macro event (last keypress+computed delay)
 }}
 
 setval =: {{
@@ -74,17 +74,9 @@ do =: {{ NB. queue macro y for playback
   I =: 0 NB. the index into macro / instruction pointer
 }}
 
-( 0 : 0 )
-  y = seconds since last tick
-  T = seconds since last keypress (sum of y over animation frames)
-  NEXT = seconds between last keypress and next keypress
-  KPS = keystrokes per second
-  %KPS = seconds per keystroke
-  TSV = some random term added to %KPS (in seconds per keystroke)
-)
 
 update =: {{
-  if. (T =: T + y) < NEXT do. return. end.
+  if. (T =: T + y) < NEXT do. return. end. NB. y = seconds since last update
   T =: 0 [ NEXT =: (TSV*?0) + %KPS NB. schedule next keypress
   NB. this provides a little language for animating the editors.
   NB. execute a series of actions on the token editor
