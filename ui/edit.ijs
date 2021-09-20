@@ -117,8 +117,6 @@ coinsert 'kvm'
 now =: 6!:1
 log =: {{ TS =: TS,now'' [ LOG =: LOG,<y }}
 
-kc_m =: {{ break_kvm_=: 1}}
-
 k_asc =: {{log '?',y,'?' }} [ ins
 ka_b =: log@'b' @ bwd
 ka_f =: log@'w' @ fwd
