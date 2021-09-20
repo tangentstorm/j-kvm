@@ -120,16 +120,16 @@ log =: {{ TS =: TS,now'' [ LOG =: LOG,<y }}
 kc_m =: {{ break_kvm_=: 1}}
 
 k_asc =: {{log '?',y,'?' }} [ ins
-kc_d =: log@'x' @ del
-kc_h =: k_bsp =: log@'X' @ bsp
-kc_a =: log@'0' @ bol
-kc_e =: log@'$' @ eol
-kc_k =: log@'K' @ keol
-kc_b =: log@'h' @ bak
-kc_f =: log@'l' @ for
-kc_t =: log@'T' @ swp  NB. TODO what does T do in vim? better code?
-ka_f =: log@'w' @ fwd
 ka_b =: log@'b' @ bwd
+ka_f =: log@'w' @ fwd
+kc_a =: log@'0' @ bol
+kc_b =: log@'h' @ bak
+kc_d =: log@'x' @ del
+kc_e =: log@'$' @ eol
+kc_f =: log@'l' @ for
+kc_h =: k_bsp =: log@'X' @ bsp
+kc_k =: log@'K' @ keol
+kc_t =: log@'T' @ swp  NB. TODO what does T do in vim? better code?
 
 mi =: {{ y {~ I. -.@(+. _1&|.) '??' E.y }} NB. merge inserts
 gettimes =: {{
