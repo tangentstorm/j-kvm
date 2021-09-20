@@ -36,7 +36,7 @@ H  =: 1            NB. height
 W  =: 1            NB. width
 R  =: 1            NB. need to redraw?
 V  =: 1            NB. visible?
-A  =: 0            NB. animated/active?
+A  =: 1            NB. animated/active?
 
 load 'tangentstorm/j-kvm/ui/list'    NB. UiList
 load 'tangentstorm/j-kvm/ui/edit'    NB. UiEditWidget

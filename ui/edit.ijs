@@ -4,6 +4,7 @@ coclass 'UiEditWidget' extends 'UiWidget'
 
 create =: {{
   setval y
+  A =: 0           NB. only animate when macro is playing
   W =: 64          NB. width/max length
   BG=: _234        NB. bg color
   FG=: _7          NB. fg color
