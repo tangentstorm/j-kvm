@@ -114,8 +114,15 @@ update =: {{
 NB. -- interactive app --
 coinsert 'kvm'
 
+NB. event handlers for up/down arrow keys
+on_up =: ]
+on_dn =: ]
+
 now =: 6!:1
 log =: {{ TS =: TS,now'' [ LOG =: LOG,<y }}
+
+k_arup =: log@'k' @ on_up
+k_ardn =: log@'j' @ on_dn
 
 k_asc =: {{log '?',y,'?' }} [ ins
 ka_b =: log@'b' @ bwd
@@ -128,6 +135,7 @@ kc_f =: log@'l' @ for
 kc_h =: k_bsp =: log@'X' @ bsp
 kc_k =: log@'K' @ keol
 kc_t =: log@'T' @ swp  NB. TODO what does T do in vim? better code?
+
 
 mi =: {{ y {~ I. -.@(+. _1&|.) '??' E.y }} NB. merge inserts
 gettimes =: {{
