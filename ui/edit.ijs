@@ -101,6 +101,8 @@ update =: {{
       case. 'w' do. fwd''
       case. 'l' do. for''
       case. 'T' do. swp''
+      case. 'k' do. on_up''
+      case. 'j' do. on_dn''
         NB. case. '!' do. eval''
       end.
     case. 'i' do.
