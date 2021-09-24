@@ -133,7 +133,8 @@ mi =: {{ y {~ I. -.@(+. _1&|.) '??' E.y }} NB. merge inserts
 gettimes =: {{
   q=.5 NB. quantization factor
   <.q^.100*2-~/\TS }}
-getlog =: {{ mi ;<@;"1 LOG ,.~ (#&'_') each 0,gettimes'' }}
+
+getlog =: {{ if. 0=#LOG do. '' else. mi ;<@;"1 LOG ,.~ (#&'_') each 0,gettimes'' end. }}
 
 kvm_init =: {{ R =: 1 [ curs 0 }}
 kvm_done =: {{ curs 1 [ reset'' [ echo'' [ raw 0}}
