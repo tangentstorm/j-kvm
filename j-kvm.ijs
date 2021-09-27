@@ -94,7 +94,7 @@ onkey =: {{
   if. 3=4!:0<vnm do. (vnm~) a.{~>y
   elseif. (c e. SPC,ASC)*.3=4!:0<'k_asc' do. k_asc k{a.
   elseif. 3=4!:0<'k_any' do. 1[k_any a.{~>y
-  elseif. k e. 3 0 do. break_kvm_ =: 1  NB. kc_spc breaks if no k_nul is found
+  elseif. k e. 0 do. break_kvm_ =: 1  NB. kc_spc breaks if no k_nul is found
   end.
   if. 0 do. NB. keypress debuggger
     sp =. putc@' '
