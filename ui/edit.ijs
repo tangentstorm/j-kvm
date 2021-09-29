@@ -123,20 +123,60 @@ on_dn =: ]
 now =: 6!:1
 log =: {{ TS =: TS,now'' [ LOG =: LOG,<y }}
 
-k_arup =: log@'k' @ on_up
-k_ardn =: log@'j' @ on_dn
-
 k_asc =: {{log '?',y,'?' }} [ ins
-ka_b =: log@'b' @ bwd
-ka_f =: log@'w' @ fwd
-kc_a =: log@'0' @ bol
-kc_b =: log@'h' @ bak
-kc_d =: log@'x' @ del
-kc_e =: log@'$' @ eol
-kc_f =: log@'l' @ for
-kc_h =: k_bsp =: log@'X' @ bsp
-kc_k =: log@'K' @ keol
-kc_t =: log@'T' @ swp  NB. TODO what does T do in vim? better code?
+
+NB. -- tables for macro language and keybindings
+rdtbl =: {{cut&> LF cut y-.CR}}
+
+NB. key<->macro table
+KEYS =: rdtbl noun define
+k_ardn j
+k_arup k
+k_bsp X
+ka_b b
+ka_f w
+kc_a 0
+kc_b h
+kc_d x
+kc_e $
+kc_f l
+kc_h X
+kc_k K
+kc_t T
+)
+
+NB. macro<->method table
+CMDS =: rdtbl noun define
+$ eol
+0 bol
+K keol
+T swp
+X bsp
+b bwd
+h bak
+j on_dn
+k on_up
+l for
+w fwd
+x del
+)
+
+NB. extract columns of those above tables
+KEY_PRESS=: 0{"1 KEYS     NB. ex: <'kc_e'
+KEY_CMDS=: ,>1{"1 KEYS    NB. ex: '$'
+CMD_CHARS =: ,>0{"1 CMDS  NB. ex: '$'
+CMD_VERBS =:   1{"1 CMDS  NB. ex: <'eol'
+
+NB. define keyboard handlers using the above tables.
+NB. for each (k_verb, cmdchar, cmdverb) triple, define:
+NB.     k_verb =: log@cmdchar @ cmdverb
+NB. ex: kc_e =: log@'$' @ eol
+t =. KEY_PRESS,.(<"0@{&CMD_CHARS ,. {&CMD_VERBS) CMD_CHARS i. KEY_CMDS
+".(' =: log@''';''' @ ';'') ;@,.~"1  t
+
+NB. catch-all keyboard handling for inserting normal keys into text
+k_asc =: {{log '?',y,'?' }} [ ins
+
 
 
 mi =: {{ y {~ I. -.@(+. _1&|.) '??' E.y }} NB. merge inserts
