@@ -89,22 +89,8 @@ update =: {{
       if. c = q do. ins q [ MODE =: 'i' return.
       else. MODE=:'n' end. NB. and fall through
     case. 'n' do.
-      select. c
-      case. '?' do. MODE =: 'i'
-      case. 'b' do. bwd''
-      case. 'h' do. bak''
-      case. '0' do. bol''
-      case. '$' do. eol''
-      case. 'K' do. keol''  NB. TODO: 'd$' is the correct macro
-      case. 'X' do. bsp''
-      case. 'x' do. del''
-      case. 'w' do. fwd''
-      case. 'l' do. for''
-      case. 'T' do. swp''
-      case. 'k' do. on_up''
-      case. 'j' do. on_dn''
-        NB. case. '!' do. eval''
-      end.
+      if. c='?' do. MODE =: 'i'
+      else. (CMD_VERBS`] {~ CMD_CHARS&i.c)`:0 '' end.
     case. 'i' do.
       if. c = q do. MODE =: 'q'
       else. ins c end.
@@ -163,20 +149,21 @@ x del
 
 NB. extract columns of those above tables
 KEY_PRESS=: 0{"1 KEYS     NB. ex: <'kc_e'
-KEY_CMDS=: ,>1{"1 KEYS    NB. ex: '$'
+KEY_CMDS=:  1{"1 KEYS     NB. ex: <'$'
 CMD_CHARS =: ,>0{"1 CMDS  NB. ex: '$'
 CMD_VERBS =:   1{"1 CMDS  NB. ex: <'eol'
+
+NB. 3 column table of keypress, key_cmd/cmd_char, cmd_verb
+KEYMAP =: KEY_PRESS ,. KEY_CMDS ,. CMD_VERBS {~ CMD_CHARS i. >KEY_CMDS
 
 NB. define keyboard handlers using the above tables.
 NB. for each (k_verb, cmdchar, cmdverb) triple, define:
 NB.     k_verb =: log@cmdchar @ cmdverb
 NB. ex: kc_e =: log@'$' @ eol
-t =. KEY_PRESS,.(<"0@{&CMD_CHARS ,. {&CMD_VERBS) CMD_CHARS i. KEY_CMDS
-".(' =: log@''';''' @ ';'') ;@,.~"1  t
+".(' =: log@'''; ''' @ ';'') ;@,.~"1  KEYMAP
 
 NB. catch-all keyboard handling for inserting normal keys into text
 k_asc =: {{log '?',y,'?' }} [ ins
-
 
 
 mi =: {{ y {~ I. -.@(+. _1&|.) '??' E.y }} NB. merge inserts
