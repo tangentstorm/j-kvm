@@ -102,9 +102,10 @@ update =: {{
 NB. -- interactive app --
 coinsert 'kvm'
 
-NB. event handlers for up/down arrow keys
+NB. event handlers for up/down/enter keys
 on_up =: ]
 on_dn =: ]
+on_accept =: ]
 
 now =: 6!:1
 log =: {{ TS =: TS,now'' [ LOG =: LOG,<y }}
@@ -128,11 +129,13 @@ kc_e $
 kc_f l
 kc_h X
 kc_k K
+kc_m !
 kc_t T
 )
 
 NB. macro<->method table
 CMDS =: rdtbl noun define
+! on_accept
 $ eol
 0 bol
 K keol
