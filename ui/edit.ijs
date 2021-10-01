@@ -56,9 +56,14 @@ atsp =: ({{y] ' ' e. C{B }}) :: 0
 fwd =: {{ whilst. (atz +: atsp)'' do. for'' end. }}
 bwd =: {{ whilst. (at0 +: atsp)'' do. bak'' end. }}
 
-render_cursor =: {{
+NB. this is a dyad so that multi-line editor can draw the cursor
+NB. on a line other than line 0. (y_coord render_cursor is_focused)
+NB. (so sadly, argument x is the y coordinate.)
+render_cursor =: 0&$: : {{
   if. y do. fg CU_FG [ bg CU_BG else. fg HI_FG [ bg HI_BG  end.
-  ({{ goxy xy [ putc y{B,E [ goxy xy=.y,0 }} :: ])"0 C }}
+  NB. draw each cursor at cooridates (C,x) (where again arg x=y coord)
+  C {{ goxy xy [ putc x{B,E [ goxy xy=.x,y }}"0 x
+  0 0$0}}
 
 render =: {{
   bg BG [ fg FG
