@@ -1,6 +1,7 @@
 NB. (text-based) UI widgets for kvm
 require 'tangentstorm/j-kvm/vid'
 extends_z_ =: {{ x [ coinsert y [ cocurrent x }}
+of_self_z_ =: {{ (m,'_','_',~>coname'')~ }}
 
 cocurrent 'UiTheme' extends 'kvm'
 
