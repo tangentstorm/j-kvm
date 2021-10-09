@@ -19,7 +19,8 @@ of =: {{ (x,'__y')~ [ y }}"1 0
 NB. smudge marks entire screen dirty so we redraw
 smudge =: {{
   for_w. W do. R__w =: 1 end.
-  fill__A 128{a. }}
+  cscr__B'' [ reset__B''
+  fill__A 128{a. [ reset__A'' }}
 
 update =: {{
   NB. update gets the number of seconds since last frame
