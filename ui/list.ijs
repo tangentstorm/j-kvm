@@ -19,6 +19,7 @@ val =: {{ C { ::a: L }}
 
 ins =: {{ R=:1 [ L=: }: (<y) C }b#~1+C=i.#b=.L,{.L }}
 del =: {{ R=:1 [ L=: L#~-.C=i.#L }}
+set =: {{ R=:1 [ L=: (<y) C } L }}
 
 render =: verb define
   for_vln. H {. S }. L do.  NB. visible lines
