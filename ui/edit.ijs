@@ -101,7 +101,7 @@ update =: {{
       else. ins c end.
     end.
     R =: 1 [ I =: I + 1
-  else. A =: 0 end.
+  else. on_macro_end'' [ A =: 0 end.
   if. MODE = 'q' do. MODE =: 'n' end. }}
 
 NB. -- interactive app --
@@ -111,6 +111,7 @@ NB. event handlers for up/down/enter keys
 on_up =: ]
 on_dn =: ]
 on_accept =: ]
+on_macro_end =: ]
 
 now =: 6!:1
 log =: {{ TS =: TS,now'' [ LOG =: LOG,<y }}
