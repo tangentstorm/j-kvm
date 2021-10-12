@@ -8,4 +8,7 @@ vid.ijs
 vt.ijs
 vm.ijs
 ui.ijs
+ui/app.ijs
+ui/edit.ijs
+ui/list.ijs
 )
