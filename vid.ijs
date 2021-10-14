@@ -84,8 +84,8 @@ puts =: putc"0^:(*@#)
 
 rnd =: {{
   CHB =: u:a.{~97+?HW$26
-  FGB =: ?HW$256
-  BGB =: HW$0 95 0 4 18
+  FGB =: -?HW$256
+  BGB =: HW$0 NB.95 0 4 18
   coname'' }}
 
 copyto =: {{ NB. copyto__self y
