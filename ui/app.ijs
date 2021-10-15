@@ -43,17 +43,18 @@ render =: {{
     XY__w blit__B C
   end.
   popterm''
-  NB. TODO: compare A to B and draw only what has changed.
+  NB. compare buffers A and B, and draw only what has changed.
   jn =. ,&.>
-  for_row. (CHB__A ~: CHB__B)+.(FGB__A ~: FGB__B)+.(BGB__A ~: BGB__B) do.
-    if. +./ row do.
-      goxy 0, ri=.row_index
-      f =. FGC each ri{FGB__B
-      b =. BGC each ri{BGB__B
-      s =. f jn b jn ri{CHB__B
-      reset@'' puts_vt_ 8 u: ;s
+  fc =. bc =. -82076 NB. arbitrary non-valid color
+  for_row. (CHB__A~:CHB__B) +. (FGB__A~:FGB__B) +. BGB__A~:BGB__B do.
+    for_col. I. row do.
+      goxy |.> ix=. <row_index,col
+      if. fc ~: f =.ix{FGB__B do. fg_vt_ fc=.f end.
+      if. bc ~: b =.ix{BGB__B do. bg_vt_ bc=.b end.
+      puts_vt_ 8 u: ix{CHB__B
     end.
   end.
+  reset''
   0 0 $ copyto__A B }}
 
 step =: render@update
