@@ -98,7 +98,7 @@ copyto =: {{ NB. copyto__self y
 
 blit =: {{ NB. xy blit__self src. stamp y onto self at xy.
   yx =: |.x
-  hw =:(<: HW-yx) <. HW__y       NB. clip to bounds.
+  hw =: (HW-yx) <. HW__y       NB. clip to bounds.
   NB. https://stackoverflow.com/questions/68362425/amend-a-subarray-in-place-in-j
   rc =: <(;/yx) + L:0 <@i."0 hw  NB. row and col indices
   CHB =: (hw {.CHB__y) rc } CHB
