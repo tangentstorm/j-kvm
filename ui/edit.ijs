@@ -136,6 +136,8 @@ kc_f l
 kc_h X
 kc_k K
 kc_m !
+kc_n j
+kc_p k
 kc_t T
 )
 
