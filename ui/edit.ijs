@@ -124,21 +124,21 @@ rdtbl =: {{cut&> LF cut y-.CR}}
 
 NB. key<->macro table
 KEYS =: rdtbl noun define
-k_ardn j
-k_arup k
+k_ardn v
+k_arup ^
 k_bsp X
 ka_b b
 ka_f w
 kc_a 0
-kc_b h
+kc_b <
 kc_d x
 kc_e $
-kc_f l
+kc_f >
 kc_h X
 kc_k K
 kc_m !
-kc_n j
-kc_p k
+kc_n v
+kc_p ^
 kc_t T
 )
 
@@ -151,10 +151,10 @@ K keol
 T swp
 X bsp
 b bwd
-h bak
-j on_dn
-k on_up
-l for
+< bak
+v on_dn
+^ on_up
+> for
 w fwd
 x del
 )
