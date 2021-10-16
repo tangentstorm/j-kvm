@@ -40,7 +40,8 @@ ins =: {{
   R=:1 [ B=: newlen {. y inspos } tmp }}"0
 
 NB. !! maybe factor out 'tmp' here, as above in 'ins'?
-del =: {{ R=:1[ C=:C-i.#C[B=:}: (1-C e.~ i.#b)#b=.B,E }}
+del =: {{ if. (>./C)>:#B do. return.
+          else. R=:1[ C=:C-i.#C[B=:}: (1-C e.~ i.#b)#b=.B,E end. }}
 bsp =: del@bak
 
 keol =: {{ R=:1[ B =: (C=:{.C) {. B }} NB. collapse cursors,kill to eol
