@@ -81,6 +81,20 @@ play =: {{ NB. queue macro y for playback
   I =: 0 NB. the index into macro / instruction pointer
 }}
 
+NB. play entire macro immediately, without animation
+NB. (used by macro debugger in jprez)
+instaplay =: {{
+  setval ''
+  play y   NB. queue macro for playback.
+  try.
+    while. A do. update NEXT=:0 end. NB. fast forward to end
+  catch.
+    echo 'in here'
+    A =: 0 NB. turn off animation if failed
+    setval '>ERR: ', (dberm'')-.CRLF
+  end.
+  A =: 0
+  0 0 $ 0}}
 
 update =: {{
   if. (T =: T + y) < NEXT do. return. end. NB. y = seconds since last update
