@@ -61,14 +61,9 @@ ceol  =: {{
 sethw =: {{ cscr go00 reset WH =: |. HW =: y }}
 init  =: {{ sethw gethw_vt_^:(-.*#y) y }}
 
-peek =: {{ (<|.y) { m~ }}
-poke =: {{ 0 0 $ (m)=: x (<|.y) } m~ }}
-pepo =: {{ ([: m peek ]) : (m poke) :: ] }}
-
-NB. peek/poke various buffers
-fgxy =: 'FGB' pepo
-bgxy =: 'BGB' pepo
-chxy =: 'CHB' pepo
+fgxy =: ( {{ (<|.y) { FGB }}) : (({{ 0 0 $ FGB =: x (<|.y) } FGB }}) :: ])
+bgxy =: ( {{ (<|.y) { BGB }}) : (({{ 0 0 $ BGB =: x (<|.y) } BGB }}) :: ])
+chxy =: ( {{ (<|.y) { CHB }}) : (({{ 0 0 $ CHB =: x (<|.y) } CHB }}) :: ])
 
 NB. write to ram
 NB. putc =: {{ (y chxy])`(FG fgxy ])`(BG bgxy ])`:0 XY }}
@@ -98,7 +93,7 @@ copyto =: {{ NB. copyto__self y
 
 blit =: {{ NB. xy blit__self src. stamp y onto self at xy.
   yx =: |.x
-  hw =: (HW-yx) <. HW__y       NB. clip to bounds.
+  hw =: (HW-yx) <. HW__y      NB. clip to bounds.
   NB. https://stackoverflow.com/questions/68362425/amend-a-subarray-in-place-in-j
   rc =: <(;/yx) + L:0 <@i."0 hw  NB. row and col indices
   CHB =: (hw {.CHB__y) rc } CHB
