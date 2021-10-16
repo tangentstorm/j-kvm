@@ -6,6 +6,7 @@ now =: 6!:1
 then=: now''
 
 create =: {{
+  BG =: 0
   W =: y               NB. list of widget references
   F =: {.y             NB. reference to currently focused widget
   C =: '' conew 'vid'  NB. canvas for widgets
@@ -19,7 +20,7 @@ of =: {{ (x,'__y')~ [ y }}"1 0
 NB. smudge marks entire screen dirty so we redraw
 smudge =: {{
   for_w. W do. R__w =: 1 end.
-  cscr__B'' [ reset__B''
+  cscr__B'' [ BG__B =: BG [ reset__B''
   fill__A 128{a. [ reset__A'' }}
 
 update =: {{
