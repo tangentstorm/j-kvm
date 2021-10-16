@@ -72,8 +72,8 @@ render =: {{
   render_cursor y
   bg BG [ fg FG  }}
 
-
-do =: {{ NB. queue macro y for playback
+do =: play NB. old name. !!! deprecate this.
+play =: {{ NB. queue macro y for playback
   MACRO =: y NB. the macro to play
   NEXT =: 0 NB. start immediately
   T =: 0 NB. start the timer
