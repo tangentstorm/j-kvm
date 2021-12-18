@@ -44,6 +44,9 @@ render =: {{
     XY__w blit__B C
   end.
   popterm''
+  EMPTY }}
+
+vtblit =: {{
   NB. compare buffers A and B, and draw only what has changed.
   jn =. ,&.>
   fc =. bc =. -82076 NB. arbitrary non-valid color
@@ -58,4 +61,4 @@ render =: {{
   reset''
   0 0 $ copyto__A B }}
 
-step =: render@update
+step =: vtblit@render@update
