@@ -116,8 +116,11 @@ update =: {{
       else. ins c end.
     end.
     R =: 1 [ I =: I + 1
-  else. on_macro_end'' [ A =: 0 end.
-  if. MODE = 'q' do. MODE =: 'n' end. }}
+  else. on_macro_end'' [ A =: 0 end. }}
+
+NB. !! why was the following line in update?
+NB. it seems intentional, but it breaks the ability to insert a '?'
+NB. if. MODE = 'q' do. MODE =: 'n' end.
 
 NB. -- interactive app --
 coinsert 'kvm'
