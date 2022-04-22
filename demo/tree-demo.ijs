@@ -8,10 +8,9 @@ create =: {{
   NB. EXpanded? HasKids? Depth
   EX =: HK =: D =: 0"0 y }}
 
+fetch_items =: {{ 2 $ a: }} NB. override this!
+
 upw =: {{ if. C{D do. R=:1 [ C=:_2{crumbs'' end. }}
-
-fetch_items =: {{ 2 $ a: }}
-
 crumbs =: {{ if. y-:'' do. y=.C end. ((y+1){.D) i: i.1+y{D }}
 path =: {{ L {~ crumbs C }}
 
@@ -24,7 +23,9 @@ render_item =: {{
   end.
   puts W {. indent,icon,' ',>y }}
 
+NB. helpers for expand/contract
 splice =: {{ {.,m,}. }}
+remove =: {{ (x{.y) , (m+x) }. y }}
 
 expand =: {{
   c =. 1 + C [ d=.(1+C{D)"0 ex =. 0#~#l[ 'l hk' =. fetch_items C
@@ -34,10 +35,8 @@ expand =: {{
   EX =: c ex splice EX
   R =: 1}}
 
-remove =: {{ (x{.y) , (m+x) }. y }}
-
 contract =: {{
-   NB. dis = distance to next item at same level or higher than C
+   NB. dn = distance to next item at same level or higher than C
    c =. C+1 [ dn =. {.I.}.C}.D<:C{D
    NB. if there is no such item, remove everything after C
    if. 0=dn do. dn =. C-~#D end.
@@ -47,13 +46,14 @@ contract =: {{
    EX =: c dn remove EX
    R =: 1}}
 
-
 toggle =: {{
   if. -. C{HK do. EMPTY return. end.
   R =: 1 [ EX=:(ex=.-.C{EX) C} EX
   if. ex do. expand'' else. contract'' end. }}
 
 
+NB. example program : directory browser
+NB. ------------------------------------------------------------
 cocurrent 'base'
 
 tree =: UiTree conl''
@@ -66,6 +66,7 @@ k_t =: toggle__tree
 kc_i =: toggle__tree  NB. tab key
 
 team=:{{x`:6 L: _1 y}}"0 _1
+
 myls =: {{
   NB. returns 2 boxed vectors:
   NB. boxed names, is-dir bits
@@ -75,7 +76,6 @@ myls =: {{
   catch. 2 $ a:
   end.}}
 
-dbg 1
 main =: {{
   tree =: UiTree L ['L HK'=.myls''
   H__tree =: <:{.gethw''
@@ -86,10 +86,7 @@ main =: {{
   app =: UiApp ,tree
   step__app loop_kvm_ 'base'
   curs 1 [ raw 0  [ reset''
-NB.  codestroy__rnd''
-NB.  codestroy__fps''
-NB.  codestroy__app''
-NB.  exit 0
-}}
+  codestroy__app''
+  exit 0 }}
 
 (9!:29) 1 [ 9!:27 'main _ '
