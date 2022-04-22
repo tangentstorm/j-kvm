@@ -62,6 +62,7 @@ k_n =: fwd__tree
 k_p =: bak__tree
 k_u =: upw__tree
 k_q =: {{break_kvm_=:1}}
+k_t =: toggle__tree
 kc_i =: toggle__tree  NB. tab key
 
 team=:{{x`:6 L: _1 y}}"0 _1
