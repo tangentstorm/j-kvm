@@ -3,7 +3,7 @@ coinsert'kvm vt'
 
 NB. -------------------------------------------------------
 
-coclass 'RandomTextWidget' extends 'UiWidget'
+class 'RandomTextWidget' extends 'UiWidget'
 
 create =: {{
   (|.gethw'') create y
@@ -32,7 +32,7 @@ codestroy =: {{
 
 NB. -------------------------------------------------------
 
-coclass 'FPSWidget' extends 'UiWidget'
+class 'FPSWidget' extends 'UiWidget'
 
 create =: {{
   create_UiWidget_ f. y
@@ -47,10 +47,10 @@ NB. -------------------------------------------------------
 cocurrent 'base'
 
 main =: {{
-  rnd =: '' conew 'RandomTextWidget'
-  fps =: '' conew 'FPSWidget'
+  rnd =: RandomTextWidget''
+  fps =: FPSWidget''
   curs 0
-  app =: (rnd,fps) conew 'UiApp'
+  app =: UiApp(rnd,fps)
   step__app loop_kvm_'base'
   curs 1 [ raw 0  [ reset''
 NB.  codestroy__rnd''

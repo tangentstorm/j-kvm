@@ -1,6 +1,5 @@
 NB. ui application
-
-coclass 'UiApp' extends 'kvm'
+class 'UiApp' extends 'kvm'
 
 now =: 6!:1
 then=: now''
@@ -12,10 +11,7 @@ create =: {{
   C =: '' conew 'vid'  NB. canvas for widgets
   B =: '' conew 'vid'  NB. main video buffer
   A =: '' conew 'vid'  NB. alternate frame buffer
-  smudge''
-}}
-
-of =: {{ (x,'__y')~ [ y }}"1 0
+  smudge'' }}
 
 NB. smudge marks entire screen dirty so we redraw
 smudge =: {{

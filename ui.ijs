@@ -1,7 +1,11 @@
 NB. (text-based) UI widgets for kvm
 require 'tangentstorm/j-kvm/vid'
+
+NB. mini object-oriented vocabulary
+class_z_   =: (coclass f.) [ {{ ". y,'_z_ =: conew&',quote y }}
 extends_z_ =: {{ x [ coinsert y [ cocurrent x }}
 of_self_z_ =: {{ (m,'_','_',~>coname'')~ }}
+of_z_ =: {{ (x,'__y')~ [ y }}"1 0
 
 cocurrent 'UiTheme' extends 'kvm'
 
@@ -18,7 +22,7 @@ CU_FG =: 0
 CU_BG =: _214
 
 
-coclass 'UiWidget' extends 'UiTheme'
+class 'UiWidget' extends 'UiTheme'
 
 create =: ]
 render =: ]

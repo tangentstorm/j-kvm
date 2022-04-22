@@ -1,5 +1,5 @@
 
-coclass 'UiList' extends 'UiWidget'
+class 'UiList' extends 'UiWidget'
 
 doc =: 'A vertically-scrolling buffer with one line highlighted.'
 

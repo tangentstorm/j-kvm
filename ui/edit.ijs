@@ -1,6 +1,6 @@
 NB. simple abstract editor
 
-coclass 'UiEditWidget' extends 'UiWidget'
+class 'UiEditWidget' extends 'UiWidget'
 
 create =: {{
   setval y
