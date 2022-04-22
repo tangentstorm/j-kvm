@@ -1,3 +1,9 @@
+NB. 'rnd' demo: random colored text.
+NB. -------------------------------------------------------
+NB. this program fills the screen with random colored characters,
+NB. and shows a frames-per-second counter in the upper left.
+NB. stop it with ctrl-space.
+
 load 'tangentstorm/j-kvm/ui'
 coinsert'kvm vt'
 
@@ -30,6 +36,7 @@ codestroy =: {{
   codestroy__buf''
   codestroy_z_ f. '' }}
 
+
 NB. -------------------------------------------------------
 
 class 'FPSWidget' extends 'UiWidget'
@@ -42,6 +49,7 @@ create =: {{
 text =: {{ ' FPS: ',' ',~ 6j2 ": % (T =: 6!:1'') - T }}
 render =: {{ puts text'' }}
 
+
 NB. -------------------------------------------------------
 
 cocurrent 'base'
@@ -52,10 +60,6 @@ main =: {{
   curs 0
   app =: UiApp(rnd,fps)
   step__app loop_kvm_'base'
-  curs 1 [ raw 0  [ reset''
-NB.  codestroy__rnd''
-NB.  codestroy__fps''
-NB.  codestroy__app''
-}}
+  curs 1 [ raw 0  [ reset'' }}
 
 (9!:29) 1 [ 9!:27 'main _ '
