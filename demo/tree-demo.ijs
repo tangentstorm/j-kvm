@@ -13,11 +13,19 @@ myls =: {{ NB. path -> boxed(boxed names) and boxed(isdir bits)
   end.}}
 
 NB. build tree widget
-tree =: UiTree L ['L HK'=.myls''
+tree =: UiTree L ['L HC'=.myls''
 H__tree =: <:{.gethw''
 TX_BG__tree =: _234
 fetch_items__tree =: {{ myls_base_ '/' joinstring path'' }}
-HK__tree =: HK
+HC__tree =: HC
+
+NB. override the colors for directories and emacs backups (*~)
+render_item__tree =: {{
+  if. x~:C do.
+    if. x{HC do. fg _15 end.
+    if. '~'={:>y do. fg _8 end.
+  end.
+  x render_item_UiTree_ f.y }}
 
 NB. assign key handlers
 k_n =: fwd__tree
