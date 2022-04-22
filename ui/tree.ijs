@@ -4,10 +4,11 @@ NB. for updating the initial D,HC,EX fields, and providing
 NB. an implementation of fetch_items.
 NB.
 NB. Internally, it uses flat lists and simply removes
-NB. lines when you collapse their parent.
+NB. items when you collapse a parent item, so you must
+NB. override 'fetch_items' to splice in the children.
 NB.
-NB. Override 'fetch_items' to provide the logic to load the
-NB. items back into the tree.
+NB. See demos/tree-demo.ijs for a working example.
+
 class 'UiTree' extends 'UiList'
 
 create =: {{
@@ -18,8 +19,13 @@ create =: {{
 }}
 
 NB. fetch_items: must return a 2-box vector:
+NB.
 NB.   box 0: a list of boxed labels
 NB.   box 1: corresponding 'has-children?' bits
+NB.
+NB. The y argument is empty. You can call crumbs''
+NB. or path'' to see the current cursor position.
+NB. (or inspect 'C{L', etc.)
 fetch_items =: {{ 2 $ a: }} NB. <-- users should override this!
 
 
