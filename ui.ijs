@@ -44,5 +44,6 @@ V  =: 1            NB. visible?
 A  =: 1            NB. animated/active?
 
 load 'tangentstorm/j-kvm/ui/list'    NB. UiList
+load 'tangentstorm/j-kvm/ui/tree'    NB. UiTree
 load 'tangentstorm/j-kvm/ui/edit'    NB. UiEditWidget
 load 'tangentstorm/j-kvm/ui/app'     NB. UiApp
