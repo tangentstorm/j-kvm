@@ -3,13 +3,13 @@ class 'UiList' extends 'UiWidget'
 
 doc =: 'A vertically-scrolling buffer with one line highlighted.'
 
-create =: verb define
+create =: {{
   W =: 32
   H =: 8
   S =: 0      NB. scroll position
   C =: 0      NB. cursor
   L =: y      NB. boxed list of labels
-)
+}}
 
 fwd =: {{ C=:(<:#L)<.C+1 if. (C-S) >: H do. S =: S + 1 end. C }}
 bak =: {{ C=: 0 >. C-1   if. (C-S) < 0 do. S =: S - 1 end. C }}
@@ -21,7 +21,10 @@ ins =: {{ R=:1 [ L=: }: (<y) C }b#~1+C=i.#b=.L,{.L }}
 del =: {{ R=:1 [ L=: L#~-.C=i.#L }}
 set =: {{ R=:1 [ L=: (<y) C } L }}
 
-render =: verb define
+NB. override hook:
+render_item =: {{ x ] puts W{.>y }}
+
+render =: {{
   for_vln. H {. S }. L do.  NB. visible lines
     goxy 0,i=.vln_index
     hi =. (C=S+i)
@@ -33,6 +36,5 @@ render =: verb define
       bg hi pick TX_BG;HI_BG
     end.
     if. vln -: a: do. puts W#' '
-    else. puts W{.>vln end.
-  end.
-)
+    else. (S+i) render_item vln end.
+  end. }}
