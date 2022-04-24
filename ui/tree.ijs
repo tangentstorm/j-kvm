@@ -11,11 +11,17 @@ NB. See demos/tree-demo.ijs for a working example.
 
 class 'UiTree' extends 'UiList'
 
+NB. the problem with adding more columns is that
+NB. when i insert/delete i need to do the same
+NB. for all columns.
+
+
 create =: {{
   create_UiList_ f. y
-  D =: 0"0 y   NB. Depth (Int vector)
-  HC=: 0"0 y   NB. Has Children? (Bit vector)
-  EX=: 0"0 y   NB. Expanded? (Bit vector)
+  L =: 0{::y     NB. list of boxed labels
+  HC=: 1{::y     NB. Has-Child? (Bit vector)
+  D =: 0"0 L     NB. Depth (Int vector)
+  EX=: 0"0 L     NB. Expanded? (Bit vector)
 }}
 
 NB. fetch_items: must return a 2-box vector:
