@@ -8,7 +8,7 @@ create =: {{
   H =: 8
   S =: 0      NB. scroll position
   C =: 0      NB. cursor
-  L =: y      NB. boxed list of labels
+  L =: y      NB. list of boxed labels
 }}
 
 fwd =: {{ C=:(<:#L)<.C+1 if. (C-S) >: H do. S =: S + 1 end. C }}
