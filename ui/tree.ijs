@@ -20,8 +20,8 @@ create =: {{
   create_UiList_ f. y
   L =: 0{::y     NB. list of boxed labels
   HC=: 1{::y     NB. Has-Child? (Bit vector)
-  D =: 0"0 L     NB. Depth (Int vector)
-  EX=: 0"0 L     NB. Expanded? (Bit vector)
+  D =: 0#~#L     NB. Depth (Int vector)
+  EX=: 0#~#L     NB. Expanded? (Bit vector)
 }}
 
 NB. fetch_items: must return a 2-box vector:
