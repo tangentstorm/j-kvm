@@ -22,7 +22,11 @@ NB. Mouse state as a vector
 'MB0 MB1 MB2 MWHL' =: 2 3 4 5
 MOUSE =: 6$0
 
-onkey =: {{
+
+NB. find callback name for input in y (where y:rkey'')
+NB. note: if key is ESC, this may read extra values from input,
+NB. so only call this once per event.
+key_handlers =: {{
   'NUL CTL ESC SEP SPC ASC BSP UTF' =. i.1+# bins =. 0 26 27 31 32 126 127
   select. c =. bins I. k =. {.>y
   case. NUL do. vnm =. 'k_nul'
@@ -90,21 +94,25 @@ onkey =: {{
     NB. hex code catchall (k=255)-> kc_ff
     NB. ^? = KDEL, other alt chars
   end.
-  NB. ask for more keys unless break=1
-  if. 3=4!:0<vnm do. (vnm~) a.{~>y
-  elseif. (c e. SPC,ASC)*.3=4!:0<'k_asc' do. k_asc k{a.
-  elseif. 3=4!:0<'k_any' do. 1[k_any a.{~>y
-  elseif. k e. 0 do. break_kvm_ =: 1  NB. kc_spc breaks if no k_nul is found
+  r =. <vnm
+  if. c e. SPC,ASC do. r=.r,<'k_asc' end.
+  r }}
+
+
+NB. dispatch key event y (y=.rkey'') in namespaces x
+onkey =: {{
+  for_vnm. key_handlers y do.
+    if. 3 = 4!:0 vnm do.
+      (>vnm)~ a.{~>y
+      EMPTY return.
+    end.
   end.
-  if. 0 do. NB. keypress debuggger
-    sp =. putc@' '
-    goxy 5 9
-    sp puts ":y
-    sp puts ": vnm
-    reset @ ceol (puts ":>coname'')
-    echo''
+  if. 3=4!:0<'k_any' do.
+    k_any a.{~>y
+    EMPTY return.
   end.
-  0 0$0}}
+  if. 0={.>y do. break_kvm_ =: 1 end. NB. kc_spc breaks if no k_nul is found
+  EMPTY }}
 
 loop =: {{
   if. #y do. cocurrent y end.
