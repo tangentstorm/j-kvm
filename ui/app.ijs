@@ -42,6 +42,7 @@ render =: {{
   popterm''
   EMPTY }}
 
+
 vtblit =: {{
   NB. compare buffers A and B, and draw only what has changed.
   jn =. ,&.>
@@ -58,3 +59,14 @@ vtblit =: {{
   0 0 $ copyto__A B }}
 
 step =: vtblit@render@update
+
+locpaths =: {{ (<'base'),F,<'kvm' }} NB. key handler paths
+dispatch =: {{ (locpaths'') onkey y }}
+
+run =: {{
+  smudge''
+  curs err =. break_kvm_=: 0
+  try. (step with_kbd dispatch)''
+  catchd. err =. 1 end.
+  curs 1 [ raw 0  [ reset''
+  if. err do. echo dberm'' end. }}
