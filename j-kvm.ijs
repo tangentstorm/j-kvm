@@ -105,8 +105,8 @@ onkey =: {{
 :
   for_kh. (key_handlers y),<'k_any' do.
     for_loc. x do.
-      if. 3 = 4!:0 vnm=.<(>kh),'__x' do.
-        (>vnm)~ a.{~>y
+      if. 3 = 4!:0 <vnm=.(>kh),'__loc' do.
+        vnm~ a.{~>y
         EMPTY return.
       end.
     end.
