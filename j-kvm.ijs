@@ -101,17 +101,17 @@ key_handlers =: {{
 
 NB. dispatch key event y (y=.rkey'') in namespaces x
 onkey =: {{
-  for_vnm. key_handlers y do.
-    if. 3 = 4!:0 vnm do.
-      (>vnm)~ a.{~>y
-      EMPTY return.
+  (coname'') onkey y
+:
+  for_kh. (key_handlers y),<'k_any' do.
+    for_loc. x do.
+      if. 3 = 4!:0 vnm=.<(>kh),'__x' do.
+        (>vnm)~ a.{~>y
+        EMPTY return.
+      end.
     end.
   end.
-  if. 3=4!:0<'k_any' do.
-    k_any a.{~>y
-    EMPTY return.
-  end.
-  if. 0={.>y do. break_kvm_ =: 1 end. NB. kc_spc breaks if no k_nul is found
+  if. 0={.>y do. break_kvm_=:1 end. NB. break unless k_nul found
   EMPTY }}
 
 loop =: {{
