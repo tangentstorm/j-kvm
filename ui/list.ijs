@@ -21,6 +21,13 @@ ins =: {{ R=:1 [ L=: }: (<y) C }b#~1+C=i.#b=.L,{.L }}
 del =: {{ R=:1 [ L=: L#~-.C=i.#L }}
 set =: {{ R=:1 [ L=: (<y) C } L }}
 
+
+NB. default keybindings
+k_arrup =: k_n =: fwd
+k_arrdn =: k_p =: bak
+k_pgup =: {{ bak^:H'' }}
+k_pgdn =: {{ fwd^:H'' }}
+
 NB. override hook:
 render_item =: {{ x ] puts W{.>y }}
 
