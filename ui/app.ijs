@@ -61,6 +61,8 @@ vtblit =: {{
 step =: vtblit@render@update
 
 kc_l =: smudge
+kc_c =: {{break_kvm_=:1}}
+k_nul=: {{ exit 0 [[ curs 1 [ raw 0 }}
 
 locpaths =: {{ (<'base'),F,coname'' }} NB. key handler paths
 dispatch =: {{ (locpaths'') onkey y }}
