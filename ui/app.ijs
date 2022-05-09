@@ -60,7 +60,9 @@ vtblit =: {{
 
 step =: vtblit@render@update
 
-locpaths =: {{ (<'base'),F,<'kvm' }} NB. key handler paths
+kc_l =: smudge
+
+locpaths =: {{ (<'base'),F,coname'' }} NB. key handler paths
 dispatch =: {{ (locpaths'') onkey y }}
 
 run =: {{
