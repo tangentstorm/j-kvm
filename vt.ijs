@@ -182,13 +182,14 @@ init =: {{
     end.
     u_noblock =: {{ u_fcntl 0,F_SETFL,O_NONBLOCK }}
     u_block =: {{ u_fcntl 0,F_SETFL,0 }}
-    NB. x: list of events; m: timeout; y: corresponding list of fds
+    NB. x: array of events; m: timeout; y: corresponding array of fds
     NB. return: list of events
     poll =: {{
       NB. struct pollfd { int fd; short events; short revents; }
-      p =. ,^:(0-:#@$) y + 32 (33 b.) x
+      NB. must ravel scalar for libc; annoying
+      'ps p' =. ($ ; ,^:(0-:#@$)) y + 32 (33 b.) x
       NB. shift off everything but revents.  Requires little endian; ok
-      _48 (33 b.) 1{:: u_poll p;(#@,p);m
+      ps $ _48 (33 b.) 1{:: u_poll p;(#@,p);m
     }}
 
     keyp =: {{
