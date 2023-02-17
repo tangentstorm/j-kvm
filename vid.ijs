@@ -16,7 +16,6 @@ NB. by default, just use vt directly
 term =: <'vt'
 cscr =: {{ cscr__term y }}
 ceol =: {{ ceol__term y }}
-putc =: {{ putc__term y }}
 goxy =: {{ goxy__term y }}
 go00 =: goxy@0 0
 puts =: {{ puts__term y }}
@@ -49,10 +48,10 @@ chxy =: 'CHB' pepo
 
 NB. write to ram
 NB. putc =: {{ (y chxy])`(FG fgxy ])`(BG bgxy ])`:0 XY }}
-putc =: {{
+puts =: 3 : 0"0
   y chxy XY [ FG fgxy XY [ BG bgxy XY
-  if. {. XY =: XY + 1 0 do. XY =: 0,1+{:XY end. }}
-puts =: putc"0
+  if. {. XY =: XY + 1 0 do. XY =: 0,1+{:XY end.
+)
 
 rnd =: {{
   CHB =: u:a.{~97+?HW$26
