@@ -63,7 +63,7 @@ NB. (so sadly, argument x is the y coordinate.)
 render_cursor =: 0&$: : {{
   if. y do. fg CU_FG [ bg CU_BG else. fg HI_FG [ bg HI_BG  end.
   NB. draw each cursor at cooridates (C,x) (where again arg x=y coord)
-  C {{ goxy xy [ putc x{B,E [ goxy xy=.x,y }}"0 x
+  C {{ goxy xy [ puts x{B,E [ goxy xy=.x,y }}"0 x
   0 0$0}}
 
 render =: {{

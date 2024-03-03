@@ -57,7 +57,7 @@ cw  =: {{
   indent =. 0
   w =. {{if.#y do. puts y end.}} NB. not sure why i need this?
   for_c. chunks do.
-    if. c = a: do. putc esc
+    if. c = a: do. puts esc
     else.
       select. h =. {. s=.}.>c NB. h=head of s=string inside the chunk
       case. '{' do. w s}.~>:s i.'}' NB. comment until } !!TODO: esc in comment
