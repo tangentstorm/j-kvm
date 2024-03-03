@@ -9,12 +9,11 @@ ticks=: 0 NB. milliseconds between calling v
 break=: 0
 
 NB. with_kbd: run v on keypress, u every 'ticks' milliseconds.
-NB. until i get keyp'' test working)
+NB. until i get keyp 0 test working)
 with_kbd =: {{
   u'' [ raw 1 [ y
   while. -. break_kvm_ do.
-    if. keyp'' do. v rkey''
-    else. sleep ticks end.
+    if. keyp ticks do. v rkey'' end.
     u''
   end. raw 0 [ curs 1 }}
 
@@ -35,19 +34,19 @@ key_handlers =: {{
     NB. check for immediate second key
     NB. TODO: this should be table driven, since different
     NB. terminals have different encodings.
-    if. keyp'' do.
-      k2=.>rkey''
+    if. keyp 0 do.
+      k2=.rkey''
       if. k2 e. 97+i.26 do. NB. alt x comes in as esc,x
         vnm =. 'ka_',k2{a.
       elseif. 91 = k2 do.          NB. 91 = a.i.'['
-        select. k3=.{.>rkey''
+        select. k3=.rkey''
         case.  65 do. vnm =. 'k_arup'   NB. CSI,'A'
         case.  66 do. vnm =. 'k_ardn'   NB. CSI,'B'
         case.  67 do. vnm =. 'k_arrt'   NB. CSI,'B'
         case.  68 do. vnm =. 'k_arlf'   NB. CSI,'C'
         case.  60 do. vnm =. 'm_evt'    NB. CSI,'<' mouse events after 'mouse 1'
           vnm =. 'm_evt'
-          s =. '' while. -. (c=.a.{~{.>rkey'') e. 'Mm' do. s=.s,c end.
+          s =. '' while. -. (c=.a.{~rkey'') e. 'Mm' do. s=.s,c end.
           'me mx my' =. 0&". every ';' cut s
           MOUSE =: (<:mx,my) 0 1 } MOUSE
           select. me

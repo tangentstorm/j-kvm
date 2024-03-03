@@ -9,7 +9,7 @@ help =: 0 : 0
   'vt' locale: j virtual terminal support
   ----------------------------------------
   raw b     -> enter(b=1)/leave(b=0) raw mode
-  keyp''    -> bit. is key pressed?
+  keyp t    -> bit. is key pressed? t timeout ms ('' means 0)
   rkey''    -> read key from keyboard
   wfc c     -> wait for character c to be pressed
 
@@ -25,7 +25,6 @@ help =: 0 : 0
   goxy x,y  -> set cursor xy
 
   puts s    -> emit string
-  putc c    -> emit character
 
   fgc n     -> set foreground color
   bgc n     -> set background color
@@ -93,15 +92,15 @@ InputArgs =: {{ w_stdi;(10#0);1;<,0 }}
 WriteConsole =: 'kernel32 WriteConsoleA b x *c *i x'&cd
 
 
-w_putc =: {{ 0 0$WriteConsole w_stdo;(1#y);(<1);<a: }}
 w_puts =: {{ 0 0$WriteConsole w_stdo;(,y);(<#y);0 }}
 w_gethw =: {{
   'l t r b'=. 4{.5}.>{: GetConsoleScreenBufferInfo w_stdo;22#0
   (b-t),(r-l) }}
 
 w_keyp =: {{
+  sleep y
   r=. PeekConsoleInput InputArgs [ w_skip''
-  0{>{: r  }}
+  0{>{: r }}
 w_skip =: {{ NB. skip events besides keydown
   NB. names for windows event codes
   'FOCUS KEY MENU MOUSE SIZE' =.  16b10 16b01 16b08 16b02 16b04
@@ -124,7 +123,7 @@ w_rkey =: {{
       mod =. '.x'{~_32{.!.0#: 65536 65536 #. _2{.b
       NB. smoutput 'dn:';dn;'rc:';rc;'kc:';kc;'ch:';ch;'mod:';mod
       NB. skip over modifier keys
-      if. dn > kc e. 16 17 18 do. <a.i.ch return. end.
+      if. dn > kc e. 16 17 18 do. a.i.{.ch return. end.
     end.
   end. }}
 
@@ -147,7 +146,7 @@ mouse =: {{
   puts CSI,'?1006h',qs }}
 
 init =: {{
-  NB. define (raw, rkey, gethw, putc) + platform-specific helpers
+  NB. define (raw, rkey, gethw, puts) + platform-specific helpers
   if. IFWIN do.
     w_stdi =: >{. GetStdHandle _10
     w_stdo =: >{. GetStdHandle _11
@@ -157,32 +156,57 @@ init =: {{
     rkey =: w_rkey
     gethw =: w_gethw
     keyp =: w_keyp
-    putc =: w_putc
     puts =: w_puts
   elseif. IFUNIX do.
     u_raw1 =: '' [ [: 2!:0 'stty raw -echo' []
     u_raw0 =: ][ [: 2!:0 'stty -raw echo' []
-    NB.u_libc =: >0{ (LF cut 2!:0) ::(a:"_) 'locate libc.so'
-    u_libc =: 'libc.so.6'
+    u_libc =: unxlib 'c'
     raw  =: {{ if. y do. u_raw1'' else. u_raw0'' end. }}
-    rkey =: (u_libc,' getchar l') & cd
     gethw =: {{ _".}: 2!:0 'stty size' }}
-    putc =: 0 0 $ (u_libc,' putchar  n c') & cd
-    puts =: putc"0
+    NB. ravel - as & cannot take a scalar
+    puts =: 0 0 $ [:(u_libc,' write n i &c l')&cd 0 ; , ; #
+    rkey =: a.i.0{2{:: [:(u_libc,' read l i *c l')&cd 1 ; ((,0){a.) ; 1:
     NB. obtain a pointer to stdin, so we can ungetc()
-    uh_libc =: >0{'libdl.so dlopen * *c i' cd 'libc.so.6';1
-    uh_stdi0 =. >0{'libdl.so dlsym * x *c'  cd uh_libc;'stdin'
-    uh_stdi =: memr uh_stdi0,0,1,4
-    u_fcntl =: 'libc.so.6 fcntl i i i i'&cd
-    u_ungetc =: 'libc.so.6 ungetc i i x'&cd
-    u_noblock =: {{ u_fcntl 0 4 2048 }}
-    keyp  =: {{ u_noblock raw 1
-       if. _1=k=.>rkey'' do. 0 else. 1: u_ungetc k,uh_stdi end. }}
+    u_fcntl =: (u_libc,' fcntl i i i i')&cd
+    u_poll =: (u_libc,' poll i *l i i')&cd
+    if. UNAME-:'Linux' do.
+      F_SETFL=: 4
+      O_NONBLOCK=: 2048
+      POLLIN =: 1
+    elseif. UNAME-:'FreeBSD' do.
+      F_SETFL=: 4
+      O_NONBLOCK=: 4
+      POLLIN =: 1
+    elseif. UNAME-:'Darwin' do.
+      F_SETFL=: 4
+      O_NONBLOCK=: 4
+      POLLIN =: 1
+    else.
+      assert. 0
+    end.
+    u_noblock =: {{ u_fcntl 0,F_SETFL,O_NONBLOCK }}
+    u_block =: {{ u_fcntl 0,F_SETFL,0 }}
+    NB. x: array of events; m: timeout; y: corresponding array of fds
+    NB. return: list of events
+    poll =: {{
+      NB. struct pollfd { int fd; short events; short revents; }
+      NB. must ravel scalar for libc; annoying
+      'ps p' =. ($ ; ,^:(0-:#@$)) y + 32 (33 b.) x
+      NB. shift off everything but revents.  Requires little endian; ok
+      ps $ _48 (33 b.) 1{:: u_poll p;(#@,p);m
+    }}
+
+    keyp =: {{
+      u_noblock''
+      r=. 1 (y poll) 0
+      u_block''
+      r
+    }}
   else.
     'vt.ijs only supports windows and unix platforms.'
   end. >a: }}
 
-wfc =: {{ r=.'' while. -.y-:c=.a.{~0{>rkey'' do. r=.r,c end. r }}
+wfc =: {{ r=.'' while. -.y-:c=.a.{~0{rkey'' do. r=.r,c end. r }}
 
 cscr =: puts@CSCR
 ceol =: puts@CEOL
@@ -220,14 +244,15 @@ demo =: {{
   puts^:2 CR,LF
   puts 'press a key!'
   xy=.curxy'' [ s =. ' _.,oO( )Oo,._ ' [ raw 1
-  while. -. keyp'' do.
+  whilst. -. keyp 150 do.
     goxy xy [ bgc 4 [ fgc 9
     puts '['
     fgc 15
     puts 4{. s=.1|.s
     fgc 9
     puts']'
-    sleep 150
   end.
-  echo a.{~>rkey'' [ reset''
-  puts^:2 CR,LF }}
+  echo a.{~rkey'' [ reset''
+  puts^:2 CR,LF
+  raw 0
+  }}

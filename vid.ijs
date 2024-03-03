@@ -21,7 +21,6 @@ popterm =: {{ stack_kvm_ =: }.stack_kvm_ [ term_kvm_ =: {.stack_kvm_ }}
 blit =: {{ x blit__term y }}
 cscr =: {{ cscr__term y }}
 ceol =: {{ ceol__term y }}
-putc =: {{ putc__term y }}
 goxy =: {{ goxy__term y }}
 go00 =: {{ goxy__term 0 0 }}
 puts =: {{ puts__term y }}
@@ -66,16 +65,15 @@ bgxy =: ( {{ (<|.y) { BGB }}) : (({{ 0 0 $ BGB =: x (<|.y) } BGB }}) :: ])
 chxy =: ( {{ (<|.y) { CHB }}) : (({{ 0 0 $ CHB =: x (<|.y) } CHB }}) :: ])
 
 NB. write to ram
-NB. putc =: {{ (y chxy])`(FG fgxy ])`(BG bgxy ])`:0 XY }}
-putc =: {{
+puts =: 3 : 0"0
   select. y
   case. CR do. XY=:0,1{XY
   case. LF do. XY=:XY + 0 1
   case. do.
     y chxy XY [ FG fgxy XY [ BG bgxy XY
-    if. 0={. XY =: WH|XY + 1 0 do.  XY =: 0,1+{:XY end.
-  end. }}
-puts =: putc"0^:(*@#)
+    if. {. XY =: XY + 1 0 do. XY =: 0,1+{:XY end.
+  end.
+)
 
 rnd =: {{
   CHB =: u:a.{~97+?HW$26
