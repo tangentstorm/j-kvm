@@ -21,16 +21,24 @@ NB. Mouse state as a vector
 'MB0 MB1 MB2 MWHL' =: 2 3 4 5
 MOUSE =: 6$0
 
-onkey =: {{
-  select. c =. 1 26 27 31 126 127 I. k =. {.>y
-  case. 0 do. vnm =. 'k_nul'
-  case. 1 do. vnm =. 'kc_',a.{~97+<:k  NB. ascii ctrl+letter ^C-> kc_c
-  case. 2 do. vnm =. 'k_esc'
+
+NB. find callback name for input in y (where y:rkey'')
+NB. note: if key is ESC, this may read extra values from input,
+NB. so only call this once per event.
+key_handlers =: {{
+  'NUL CTL ESC SEP SPC ASC BSP UTF' =. i.1+# bins =. 0 26 27 31 32 126 127
+  select. c =. bins I. k =. {.>y
+  case. NUL do. vnm =. 'k_nul'
+  case. CTL do. vnm =. 'kc_',a.{~97+<:k  NB. ascii ctrl+letter ^C-> kc_c
+  case. ESC do. vnm =. 'k_esc'
     NB. check for immediate second key
     NB. TODO: this should be table driven, since different
     NB. terminals have different encodings.
     if. keyp 0 do.
-      if. 91 = k2=.rkey'' do.           NB. 91 = a.i.'['
+      k2=.rkey''
+      if. k2 e. 97+i.26 do. NB. alt x comes in as esc,x
+        vnm =. 'ka_',k2{a.
+      elseif. 91 = k2 do.          NB. 91 = a.i.'['
         select. k3=.rkey''
         case.  65 do. vnm =. 'k_arup'   NB. CSI,'A'
         case.  66 do. vnm =. 'k_ardn'   NB. CSI,'B'
@@ -73,27 +81,37 @@ onkey =: {{
             end.
           end.
         end.
-        NB. TODO: esc x = alt x
       else.
         NB. echo 'unexpected key after esc:', ":k2
       end.
     end.
-  NB. case. 3 do. NB. TODO ^\, ^], ^^, ^_ (FS,GS,RS,US)
-  case. 4 do. vnm =. 'k_',a.{~k
-  case. 5 do. vnm =. 'k_bksp'
-  case.   do. vnm =. 'kx_',hfd k
+  case. SEP do. NB. TODO TODO ^\, ^], ^^, ^_ (FS,GS,RS,US)
+  case. SPC do. vnm =. 'k_spc'
+  case. ASC do. vnm =. 'k_',a.{~k
+  case. BSP do. vnm =. 'k_bsp'
+  case. UTF do. vnm =. 'kx_',hfd k
     NB. hex code catchall (k=255)-> kc_ff
     NB. ^? = KDEL, other alt chars
   end.
-  NB. ask for more keys unless break=1
-  if. 3=4!:0<vnm do. (vnm~) a.{~>y
-  elseif. (c=4)*.3=4!:0<'k_asc' do. k_asc k{a.
-  elseif. 3=4!:0<'k_any' do. 1[k_any a.{~>y
-  elseif. k e. 3 0 do. break_kvm_ =: 1
+  r =. <vnm
+  if. c e. SPC,ASC do. r=.r,<'k_asc' end.
+  r }}
+
+
+NB. dispatch key event y (y=.rkey'') in namespaces x
+onkey =: {{
+  (coname'') onkey y
+:
+  for_kh. (key_handlers y),<'k_any' do.
+    for_loc. x do.
+      if. 3 = 4!:0 <vnm=.(>kh),'__loc' do.
+        vnm~ a.{~>y
+        EMPTY return.
+      end.
+    end.
   end.
-  sp =: puts@' '
-  NB. reset @ ceol (puts ":>coname'') sp puts ": vnm [ sp puts ":y [ echo'' NB.goxy 0 9
-  0 0$0}}
+  if. 0={.>y do. break_kvm_=:1 end. NB. break unless k_nul found
+  EMPTY }}
 
 loop =: {{
   if. #y do. cocurrent y end.
