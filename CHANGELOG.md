@@ -1,4 +1,12 @@
 
+## version ?? - ??
+
+- render -> blit
+- added a bunch of widgets
+- added termstack
+- added handler for alt-keys
+- etc
+
 ## version 0.0.4 - 7/29/2021
 
 - bugfix: add vm.ijs to manifest

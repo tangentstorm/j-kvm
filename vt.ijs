@@ -38,7 +38,7 @@ help =: 0 : 0
   mouse b   -> enable/disable mouse events
 )
 
-
+D00 =: 1 1  NB. origin (so upper corner is 0 0 instead of 1 1)
 
 NB. ANSI/VT-100/xterm escape codes
 NB. -------------------------------------------------------
@@ -46,7 +46,7 @@ NB. these all-caps names indicate string constants
 NB. or verbs that return strings. This is so you can
 NB. build up your own sequences in bulk.
 
-ESC  =: u:27               NB. ANSI escape character
+ESC  =: 27{a.              NB. ANSI escape character
 CSI  =: ESC,'['            NB. vt100 'command sequence introduce'
 CSCR =: ,CSI,"1 0'HJ'      NB. clear screen
 CEOL =: CSI,'0K'           NB. clear to end of line
@@ -67,8 +67,12 @@ NB. FG24B y ->str.
 FG24B=: CSI,'38;2;', 'm',~ [: rplc&(' ';';')@": (3#256)&#:
 BG24B=: CSI,'48;2;', 'm',~ [: rplc&(' ';';')@": (3#256)&#:
 
+NB. Main interface: select 24-bit color if positive, 8-bit if neg
+FGC =: (FG24B_vt_`(FG256_vt_@-))@.(0&>:)
+BGC =: (BG24B_vt_`(BG256_vt_@-))@.(0&>:)
+
 NB. GOXY[X,Y]->str: code to set cursor position
-GOXY =: CSI, ":@{:, ';', 'f',~ ":@{.
+GOXY =: [: (CSI, ":@{:, ';', 'f',~ ":@{.) D00+]
 
 NB. CURS [0/1]->str: code to show/hide cursor
 CURS =: CSI,'?25','lh'{~]
@@ -116,7 +120,7 @@ w_rkey =: {{
     if. *{.nr do.
       dn=. 2{b
       'rc kc sc ch' =. 4{.4}.b
-      ch =. u:ch
+      ch =. ch{a.
       mod =. '.x'{~_32{.!.0#: 65536 65536 #. _2{.b
       NB. smoutput 'dn:';dn;'rc:';rc;'kc:';kc;'ch:';ch;'mod:';mod
       NB. skip over modifier keys
@@ -130,7 +134,7 @@ NB. ----------------------------------------------------
 
 curxy =: {{ raw 1
   r =. 2}. wfc 'R' [ puts CSI,'6n'
-  |.0".>';' splitstring r }}
+  D00 -~ |.0".>';' splitstring r }}
 
 mouse =: {{
   'cdm' mouse y  NB. click, drag, move events
@@ -193,6 +197,9 @@ fgc =: puts@FG256
 bgc =: puts@BG256
 fgx =: puts@FG24B
 bgx =: puts@BG24B
+
+fg =: puts@FGC
+bg =: puts@BGC
 reset=: puts@RESET
 
 NB. these two are just handy to type when your screen gets messy:
