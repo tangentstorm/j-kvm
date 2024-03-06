@@ -65,15 +65,15 @@ bgxy =: ( {{ (<|.y) { BGB }}) : (({{ 0 0 $ BGB =: x (<|.y) } BGB }}) :: ])
 chxy =: ( {{ (<|.y) { CHB }}) : (({{ 0 0 $ CHB =: x (<|.y) } CHB }}) :: ])
 
 NB. write to ram
-puts =: 3 : 0"0
+puts =: {{
   select. y
   case. CR do. XY=:0,1{XY
   case. LF do. XY=:XY + 0 1
   case. do.
     y chxy XY [ FG fgxy XY [ BG bgxy XY
-    if. {. XY =: XY + 1 0 do. XY =: 0,1+{:XY end.
-  end.
-)
+    if. 0={. XY =: WH|XY + 1 0 do. XY =: 0,1+{:XY end.
+  end. }}"0
+
 
 rnd =: {{
   CHB =: u:a.{~97+?HW$26
