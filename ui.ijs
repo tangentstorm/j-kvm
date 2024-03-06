@@ -28,11 +28,15 @@ create =: ]
 render =: ]
 update =: ]
 
-termdraw =: {{ NB. y is hasfocus (same arg as render)
+tobuf =: {{
   buf =. (W,H) conew 'vid'
   pushterm buf
   render y
   popterm''
+  buf }}
+
+termdraw =: {{ NB. y is hasfocus (same arg as render)
+  buf =. tobuf y
   XY blit buf
   0 0 $ codestroy__buf'' }}
 
