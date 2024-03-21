@@ -26,7 +26,7 @@ setval =: {{
   TS =: 0$0        NB. timestamps for the log
   R =: 1           NB. set redraw flag
 }}
-
+
 getstate =: {{ C;B;M;MODE }}
 setstate =: {{)v
   'c b m mode' =. y
@@ -56,7 +56,7 @@ at0 =: {{y] -. 0<<./C }}
 atsp =: ({{y] ' ' e. C{B }}) :: 0
 fwd =: {{ whilst. (atz +: atsp)'' do. for'' end. }}
 bwd =: {{ whilst. (at0 +: atsp)'' do. bak'' end. }}
-
+
 NB. this is a dyad so that multi-line editor can draw the cursor
 NB. on a line other than line 0. (y_coord render_cursor is_focused)
 NB. (so sadly, argument x is the y coordinate.)
@@ -80,7 +80,7 @@ play =: {{ NB. queue macro y for playback
   A =: 1 NB. start animation mode
   I =: 0 NB. the index into macro / instruction pointer
 }}
-
+
 NB. play entire macro immediately, without animation
 NB. (used by macro debugger in jprez)
 instaplay =: {{
@@ -117,7 +117,7 @@ update =: {{
     end.
     R =: 1 [ I =: I + 1
   else. on_macro_end'' [ A =: 0 end. }}
-
+
 NB. !! why was the following line in update?
 NB. it seems intentional, but it breaks the ability to insert a '?'
 NB. if. MODE = 'q' do. MODE =: 'n' end.
@@ -138,7 +138,7 @@ k_asc =: {{log '?',y,'?' }} [ ins
 
 NB. -- tables for macro language and keybindings
 rdtbl =: {{cut&> LF cut y-.CR}}
-
+
 NB. key<->macro table
 KEYS =: rdtbl noun define
 k_ardn v
@@ -175,7 +175,7 @@ v on_dn
 w fwd
 x del
 )
-
+
 NB. extract columns of those above tables
 KEY_PRESS=: 0{"1 KEYS     NB. ex: <'kc_e'
 KEY_CMDS=:  1{"1 KEYS     NB. ex: <'$'
@@ -194,7 +194,7 @@ NB. ex: kc_e =: log@'$' @ eol
 NB. catch-all keyboard handling for inserting normal keys into text
 k_asc =: {{log '?',y,'?' }} [ ins
 
-
+
 mi =: {{ y {~ I. -.@(+. _1&|.) '??' E.y }} NB. merge inserts
 gettimes =: {{
   q=.5 NB. quantization factor
